@@ -36,6 +36,37 @@ func _ready():
     randomize()
     build_level()
 
+
+func _input(event):
+    if !event.is_pressed():
+        return
+
+    if event.is_action("Left"):
+        try_move(-1, 0)
+    elif event.is_action("Right"):
+        try_move(1, 0)
+    elif event.is_action("Up"):
+        try_move(0, -1)
+    elif event.is_action("Down"):
+        try_move(0, 1)
+
+func try_move(dx, dy):
+    var x = player_tile.x + dx
+    var y = player_tile.y + dy
+
+    var tile_type = Tile.OuterWall
+    if x >= 0 && x < level_size.x && y >= 0 && y < level_size.y:
+        tile_type = map[x][y]
+
+    match tile_type:
+        Tile.Ground:
+            player_tile = Vector2(x, y)
+
+        Tile.Door:
+            set_tile(x, y, Tile.Ground)
+
+    update_visuals()
+
 func _get_subtile_coord(id):
     var tiles = $TileMap.tile_set
     var rect = tile_map.tile_set.tile_get_region(id)
@@ -64,6 +95,17 @@ func build_level():
         add_rooms(free_regions)
         if free_regions.empty():
             break
+
+    connect_rooms()
+
+    var start_room = rooms.front()
+    var player_x = start_room.position.x + 1 + randi() % int(start_room.size.x - 3)
+    var player_y = start_room.position.y + 1 + randi() % int(start_room.size.y - 3)
+    player_tile = Vector2(player_x, player_y)
+    update_visuals()
+
+func update_visuals():
+    player.position = player_tile * TILE_SIZE
 
 
 func add_rooms(free_regions):
@@ -133,7 +175,6 @@ func cut_regions(free_regions, region_to_remove):
     for region in addition_queue:
         free_regions.append(region)
 
-    connect_rooms()
 
 func connect_rooms():
     var stone_graph = AStar.new()
