@@ -23,6 +23,7 @@ var level_size
 # Node references
 
 onready var tile_map = $TileMap
+onready var visibility_map = $VisibilityMap
 onready var player = $Player
 
 # Game State
@@ -43,8 +44,10 @@ func _input(event):
 
     if event.is_action("Left"):
         try_move(-1, 0)
+        player.get_node("AnimatedSprite").set_flip_h(true)
     elif event.is_action("Right"):
         try_move(1, 0)
+        player.get_node("AnimatedSprite").set_flip_h(false)
     elif event.is_action("Up"):
         try_move(0, -1)
     elif event.is_action("Down"):
@@ -65,7 +68,7 @@ func try_move(dx, dy):
         Tile.Door:
             set_tile(x, y, Tile.Ground)
 
-    update_visuals()
+    call_deferred("update_visuals")
 
 func _get_subtile_coord(id):
     var tiles = $TileMap.tile_set
@@ -87,7 +90,8 @@ func build_level():
         map.append([])
         for y in range(level_size.y):
             map[x].append(Tile.OuterWall)
-            tile_map.set_cell(x, y, Tile.OuterWall, false, false, false, _get_subtile_coord(Tile.OuterWall))
+            set_tile(x, y, Tile.OuterWall)
+            visibility_map.set_cell(x, y, 0, false, false, false, _get_subtile_coord(0))
 
     var free_regions = [Rect2(Vector2(2,2), level_size - Vector2(4,4))]
     var num_rooms = LEVEL_ROOM_COUNTS[level_num]
@@ -102,11 +106,26 @@ func build_level():
     var player_x = start_room.position.x + 1 + randi() % int(start_room.size.x - 3)
     var player_y = start_room.position.y + 1 + randi() % int(start_room.size.y - 3)
     player_tile = Vector2(player_x, player_y)
-    update_visuals()
+    call_deferred("update_visuals")
 
 func update_visuals():
     player.position = player_tile * TILE_SIZE
+    yield(get_tree(), "idle_frame")
+    var player_center = tile_to_pixel_center(player_tile.x, player_tile.y)
+    var space_state = get_world_2d().direct_space_state
+    for x in range(level_size.x):
+        for y in range(level_size.y):
+            if visibility_map.get_cell(x, y) ==0:
+                var x_dir = 1 if x < player_tile.x else -1
+                var y_dir = 1 if y < player_tile.y else -1
+                var test_point = tile_to_pixel_center(x, y) + Vector2(x_dir, y_dir) * TILE_SIZE / 2
+                
+                var occlusion = space_state.intersect_ray(player_center, test_point)
+                if !occlusion || (occlusion.position - test_point).length() < 1:
+                        visibility_map.set_cell(x, y, -1)
 
+func tile_to_pixel_center(x, y):
+	return Vector2((x + 0.5) * TILE_SIZE, (y + 0.5) * TILE_SIZE)
 
 func add_rooms(free_regions):
     var region = free_regions[randi() % free_regions.size()]
@@ -297,3 +316,4 @@ func pick_random_door_location(room):
 func set_tile(x, y, type):
     map[x][y] = type
     tile_map.set_cell(x, y, type, false, false, false, _get_subtile_coord(type))
+
