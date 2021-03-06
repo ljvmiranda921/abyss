@@ -5,29 +5,6 @@
 [ext_resource path="res://Game.gd" type="Script" id=3]
 [ext_resource path="res://art/Visibility.png" type="Texture" id=4]
 
-[sub_resource type="TileSet" id=7]
-0/name = "Visibility.png 0"
-0/texture = ExtResource( 4 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 128, 96 )
-0/tile_mode = 2
-0/autotile/icon_coordinate = Vector2( 0, 0 )
-0/autotile/tile_size = Vector2( 32, 32 )
-0/autotile/spacing = 0
-0/autotile/occluder_map = [  ]
-0/autotile/navpoly_map = [  ]
-0/autotile/priority_map = [  ]
-0/autotile/z_index_map = [  ]
-0/occluder_offset = Vector2( 0, 0 )
-0/navigation_offset = Vector2( 0, 0 )
-0/shape_offset = Vector2( 0, 0 )
-0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape_one_way = false
-0/shape_one_way_margin = 0.0
-0/shapes = [  ]
-0/z_index = 0
-
 [sub_resource type="ConvexPolygonShape2D" id=8]
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 
@@ -306,6 +283,22 @@ points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 } ]
 3/z_index = 0
 
+[sub_resource type="TileSet" id=29]
+0/name = "Visibility.png 0"
+0/texture = ExtResource( 4 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 32, 32 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 32, 32 )
@@ -333,13 +326,13 @@ animations = [ {
 [node name="Game" type="Node2D"]
 script = ExtResource( 3 )
 
-[node name="VisibilityMap" type="TileMap" parent="."]
-tile_set = SubResource( 7 )
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
 format = 1
 
-[node name="TileMap" type="TileMap" parent="."]
-tile_set = SubResource( 1 )
+[node name="VisibilityMap" type="TileMap" parent="."]
+tile_set = SubResource( 29 )
 cell_size = Vector2( 32, 32 )
 format = 1
 
@@ -349,7 +342,6 @@ format = 1
 position = Vector2( 16, 16 )
 frames = SubResource( 6 )
 animation = "walk"
-frame = 2
 speed_scale = 1.5
 playing = true
 

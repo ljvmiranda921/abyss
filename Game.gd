@@ -125,7 +125,7 @@ func update_visuals():
                         visibility_map.set_cell(x, y, -1)
 
 func tile_to_pixel_center(x, y):
-	return Vector2((x + 0.5) * TILE_SIZE, (y + 0.5) * TILE_SIZE)
+    return Vector2((x + 0.5) * TILE_SIZE, (y + 0.5) * TILE_SIZE)
 
 func add_rooms(free_regions):
     var region = free_regions[randi() % free_regions.size()]
