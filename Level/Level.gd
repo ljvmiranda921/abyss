@@ -30,6 +30,19 @@ func init(size, room_count, min_room_dim, max_room_dim):
     self.max_room_dim = max_room_dim
 
 
+func get_tile_type(x, y) -> int:
+    var tile_type = map[x][y]
+    return tile_type
+
+
+func get_start_coord() -> Vector2:
+    # Get starting coordinate when initializing player
+    var start_room = rooms.front()
+    var x = start_room.position.x + 1 + randi() % int(start_room.size.x - 3)
+    var y = start_room.position.y + 1 + randi() % int(start_room.size.y - 3)
+    return Vector2(x, y)
+
+
 func build_level():
     # Clear containers first
     rooms.clear()
@@ -49,7 +62,6 @@ func build_level():
             break
 
     connect_rooms()
-    var start_room = rooms.front()  # TODO: return this later? or write getter
 
 
 func add_rooms(free_regions):
