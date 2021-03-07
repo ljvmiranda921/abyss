@@ -47,6 +47,11 @@ func get_start_coord() -> Vector2:
     return Vector2(x, y)
 
 
+func set_tile(x, y, type):
+    map[x][y] = type
+    tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
+
+
 func build_level():
     # Clear containers first
     rooms.clear()
@@ -61,14 +66,14 @@ func build_level():
 
     var free_regions = [Rect2(Vector2(2, 2), level_size - Vector2(4, 4))]
     for i in range(room_count):
-        add_rooms(free_regions)
+        _add_rooms(free_regions)
         if free_regions.empty():
             break
 
-    connect_rooms()
+    _connect_rooms()
 
 
-func add_rooms(free_regions):
+func _add_rooms(free_regions):
     var region = free_regions[randi() % free_regions.size()]
 
     var size_x = min_room_dim
@@ -104,10 +109,10 @@ func add_rooms(free_regions):
         for x in range(start_x + 1, start_x + size_x - 1):
             set_tile(x, y, Tile.Ground)
 
-    cut_regions(free_regions, room)
+    _cut_regions(free_regions, room)
 
 
-func cut_regions(free_regions, region_to_remove):
+func _cut_regions(free_regions, region_to_remove):
     var removal_queue = []
     var addition_queue = []
 
@@ -148,7 +153,7 @@ func cut_regions(free_regions, region_to_remove):
         free_regions.append(region)
 
 
-func connect_rooms():
+func _connect_rooms():
     var stone_graph = AStar.new()
     var point_id = 0
     for x in range(level_size.x):
@@ -177,11 +182,11 @@ func connect_rooms():
         point_id += 1
 
     # Add random connections until everything is connected
-    while ! is_everything_connected(room_graph):
-        add_random_connection(stone_graph, room_graph)
+    while ! _is_everything_connected(room_graph):
+        _add_random_connection(stone_graph, room_graph)
 
 
-func is_everything_connected(graph):
+func _is_everything_connected(graph):
     var points = graph.get_points()
     var start = points.pop_back()
     for point in points:
@@ -191,13 +196,13 @@ func is_everything_connected(graph):
     return true
 
 
-func add_random_connection(stone_graph, room_graph):
-    var start_room_id = get_least_connected_point(room_graph)
-    var end_room_id = get_nearest_unconnected_point(room_graph, start_room_id)
+func _add_random_connection(stone_graph, room_graph):
+    var start_room_id = _get_least_connected_point(room_graph)
+    var end_room_id = _get_nearest_unconnected_point(room_graph, start_room_id)
 
     # Pick door locations
-    var start_position = pick_random_door_location(rooms[start_room_id])
-    var end_position = pick_random_door_location(rooms[end_room_id])
+    var start_position = _pick_random_door_location(rooms[start_room_id])
+    var end_position = _pick_random_door_location(rooms[end_room_id])
 
     # Find a path to connect the doors to each other
     var closest_start_point = stone_graph.get_closest_point(start_position)
@@ -215,7 +220,7 @@ func add_random_connection(stone_graph, room_graph):
     room_graph.connect_points(start_room_id, end_room_id)
 
 
-func get_least_connected_point(graph):
+func _get_least_connected_point(graph):
     var point_ids = graph.get_points()
 
     var least
@@ -232,7 +237,7 @@ func get_least_connected_point(graph):
     return tied_for_least[randi() % tied_for_least.size()]
 
 
-func get_nearest_unconnected_point(graph, target_point):
+func _get_nearest_unconnected_point(graph, target_point):
     var target_position = graph.get_point_position(target_point)
     var point_ids = graph.get_points()
 
@@ -257,7 +262,7 @@ func get_nearest_unconnected_point(graph, target_point):
     return tied_for_nearest[randi() % tied_for_nearest.size()]
 
 
-func pick_random_door_location(room):
+func _pick_random_door_location(room):
     var options = []
     for x in range(room.position.x + 1, room.end.x - 2):
         options.append(Vector3(x, room.position.y, 0))
@@ -268,11 +273,6 @@ func pick_random_door_location(room):
         options.append(Vector3(room.end.x - 1, y, 0))
 
     return options[randi() % options.size()]
-
-
-func set_tile(x, y, type):
-    map[x][y] = type
-    tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
 
 
 func _get_subtile(id) -> Vector2:
