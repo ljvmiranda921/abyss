@@ -1,13 +1,26 @@
 extends Node2D
 
+# Constants
 const TILE_SIZE = 32
+const LEVEL_SIZES = [
+    Vector2(30, 30), 
+    Vector2(35, 35),
+    Vector2(40, 40)
+]
 
+# Game state containers
+var level_num: int = 0
+
+# Tilemap reference
+enum Tile { OuterWall, InnerWall, Ground, Door }
+
+# Scene instances
 onready var level = preload("res://Level/Level.tscn").instance()
 onready var player = preload("res://Player/Player.tscn").instance()
 
 func _ready():
     OS.set_window_size(Vector2(1280, 720))
-    level.init(Vector2(30, 30), 5, 5, 8)
+    level.init(LEVEL_SIZES[level_num], 5, 5, 8)
     player.init(100)
     add_child(level)
     add_child(player)
@@ -15,5 +28,40 @@ func _ready():
     # Add player and place in level
     var start_coord = level.get_start_coord()
     player.set_tile_coord(start_coord) 
-    player.position = player.tile_coord * TILE_SIZE  # TODO: put in update visuals
+    call_deferred("update_visuals")
+
+
+func _input(event):
+    if !event.is_pressed():
+        return
+
+    if event.is_action("Left"):
+        handle_directional_input(-1, 0)
+        player.get_node("AnimatedSprite").set_flip_h(true)
+    elif event.is_action("Right"):
+        handle_directional_input(1, 0)
+        player.get_node("AnimatedSprite").set_flip_h(false)
+    elif event.is_action("Up"):
+        handle_directional_input(0, -1)
+    elif event.is_action("Down"):
+        handle_directional_input(0, 1)
+
+func handle_directional_input(dx, dy):
+    # Compute destination first
+    var dest_x = player.tile_coord.x + dx
+    var dest_y = player.tile_coord.y + dy
+    # Get tile type
+    var tile_type = level.get_tile_type(dest_x, dest_y)
+    # Based on tile type, do something (e.g. move player, etc.)
+    match tile_type:
+        Tile.Ground:
+            player.move(dest_x, dest_y)
+        Tile.Door:
+            level.set_tile(dest_x, dest_y, Tile.Ground)
+    call_deferred("update_visuals")
+
+
+func update_visuals():
+    player.position = player.tile_coord * TILE_SIZE
+
 

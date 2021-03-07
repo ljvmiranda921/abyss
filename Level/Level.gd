@@ -31,7 +31,11 @@ func init(size, room_count, min_room_dim, max_room_dim):
 
 
 func get_tile_type(x, y) -> int:
-    var tile_type = map[x][y]
+    var tile_type: int
+    if x >= 0 && x < level_size.x && y >= 0 && y < level_size.y:
+        tile_type = map[x][y]
+    else:
+        tile_type = Tile.OuterWall
     return tile_type
 
 
