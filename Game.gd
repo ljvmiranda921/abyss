@@ -63,5 +63,5 @@ func handle_directional_input(dx, dy):
 
 func update_visuals():
     player.position = player.tile_coord * TILE_SIZE
-
-
+    yield(get_tree(), "idle_frame")
+    level.update_visibility_map(player.tile_coord, TILE_SIZE)

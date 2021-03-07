@@ -52,6 +52,27 @@ func set_tile(x, y, type):
     tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
 
 
+func update_visibility_map(player_tile: Vector2, tile_size: int):
+
+    print_debug("update_visibility_map")
+    var player_center = _tile_to_pixel_center(player_tile.x, player_tile.y, tile_size)
+    var space_state = get_world_2d().direct_space_state
+
+    for x in range(level_size.x):
+        for y in range(level_size.y):
+            if visibility_map.get_cell(x, y) == 0:
+                var x_dir = 1 if x < player_tile.x else -1
+                var y_dir = 1 if y < player_tile.y else -1
+                var test_point = _tile_to_pixel_center(x, y, tile_size) + Vector2(x_dir, y_dir) * tile_size / 2
+
+                var occlusion = space_state.intersect_ray(player_center, test_point)
+                if !occlusion || (occlusion.position - test_point).length() < 1:
+                    visibility_map.set_cell(x, y, -1)
+
+
+func _tile_to_pixel_center(x, y, tile_size: int):
+    return Vector2((x + 0.5) * tile_size, (y + 0.5) * tile_size)
+
 func build_level():
     # Clear containers first
     rooms.clear()
@@ -63,6 +84,7 @@ func build_level():
         for y in range(level_size.y):
             map[x].append(Tile.OuterWall)
             set_tile(x, y, Tile.OuterWall)
+            visibility_map.set_cell(x, y, 0)
 
     var free_regions = [Rect2(Vector2(2, 2), level_size - Vector2(4, 4))]
     for i in range(room_count):
