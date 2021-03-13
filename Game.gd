@@ -15,7 +15,7 @@ var level_num: int = 0
 enum Tile { OuterWall, InnerWall, Ground, Door }
 
 # Scene instances
-onready var level = preload("res://Level/Level.tscn").instance()
+onready var level = preload("res://Level/Forest.tscn").instance()
 onready var player = preload("res://Player/Player.tscn").instance()
 
 func _ready():
