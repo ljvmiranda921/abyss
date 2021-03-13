@@ -11,6 +11,7 @@ var start_room: Rect2
 var map = []
 var rooms = []
 var enemies = []
+var enemy_pathfinding
 
 # Node references
 onready var tile_map = $TileMap
@@ -52,11 +53,13 @@ func set_tile(x, y, type):
     map[x][y] = type
     tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
 
+    if type == Tile.Ground:
+        clear_path(Vector2(x, y))
 
-func update_visibility_map(player_tile: Vector2, tile_size: int):
+
+func update_visibility_map(player_tile: Vector2, tile_size: int, space_state):
 
     var player_center = _tile_to_pixel_center(player_tile.x, player_tile.y, tile_size)
-    var space_state = get_world_2d().direct_space_state
 
     for x in range(level_size.x):
         for y in range(level_size.y):
@@ -68,6 +71,18 @@ func update_visibility_map(player_tile: Vector2, tile_size: int):
                 var occlusion = space_state.intersect_ray(player_center, test_point)
                 if !occlusion || (occlusion.position - test_point).length() < 1:
                     visibility_map.set_cell(x, y, -1)
+
+func update_enemy_positions(player_tile: Vector2, tile_size: int, space_state):
+
+    var player_center = _tile_to_pixel_center(player_tile.x, player_tile.y, tile_size)
+
+    for enemy in enemies:
+        enemy.sprite_node.position = enemy.tile_coord * tile_size
+        if !enemy.sprite_node.visible:
+            var enemy_center = _tile_to_pixel_center(enemy.tile_coord.x, enemy.tile_coord.y, tile_size)
+            var occlusion = space_state.intersect_ray(player_center, enemy_center)
+            if !occlusion:
+                enemy.sprite_node.visible = true
 
 
 func add_enemies(game, level_num, num_enemies):
@@ -87,6 +102,26 @@ func add_enemies(game, level_num, num_enemies):
             enemies.append(enemy)
 
 
+func clear_path(tile):
+    var new_point = enemy_pathfinding.get_available_point_id()
+    enemy_pathfinding.add_point(new_point, Vector3(tile.x, tile.y, 0))
+    var points_to_connect = []
+
+    if tile.x > 0 && map[tile.x - 1][tile.y] == Tile.Ground:
+        points_to_connect.append(enemy_pathfinding.get_closest_point(Vector3(tile.x - 1, tile.y, 0)))
+    if tile.y > 0 && map[tile.x][tile.y - 1] == Tile.Ground:
+        points_to_connect.append(enemy_pathfinding.get_closest_point(Vector3(tile.x, tile.y - 1, 0)))
+    if tile.x < level_size.x - 1 && map[tile.x + 1][tile.y] == Tile.Ground:
+        points_to_connect.append(enemy_pathfinding.get_closest_point(Vector3(tile.x + 1, tile.y, 0)))
+    if tile.y < level_size.y - 1 && map[tile.x][tile.y + 1] == Tile.Ground:
+        points_to_connect.append(enemy_pathfinding.get_closest_point(Vector3(tile.x, tile.y + 1, 0)))
+
+    for point in points_to_connect:
+        enemy_pathfinding.connect_points(point, new_point)
+
+
+
+
 func _tile_to_pixel_center(x, y, tile_size: int):
     return Vector2((x + 0.5) * tile_size, (y + 0.5) * tile_size)
 
@@ -99,6 +134,9 @@ func build_level():
     for enemy in enemies:
         enemy.remove()
     enemies.clear()
+
+
+    enemy_pathfinding = AStar.new()
 
 
     for x in range(level_size.x):
