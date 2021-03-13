@@ -54,7 +54,6 @@ func set_tile(x, y, type):
 
 func update_visibility_map(player_tile: Vector2, tile_size: int):
 
-    print_debug("update_visibility_map")
     var player_center = _tile_to_pixel_center(player_tile.x, player_tile.y, tile_size)
     var space_state = get_world_2d().direct_space_state
 
