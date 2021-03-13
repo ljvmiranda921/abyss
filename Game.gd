@@ -56,7 +56,18 @@ func handle_directional_input(dx, dy):
     var tile_type = level.get_tile_type(dest_x, dest_y)
     match tile_type:
         Tile.Ground:
-            player.move(dest_x, dest_y)
+            var blocked = false
+            for enemy in level.enemies:
+                if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
+                    # TODO: Player attack
+                    print_debug("TODO: Player attack!")
+                    if enemy.dead:
+                        enemy.remove()
+                        level.enemies.erase(enemy)
+                    blocked = true
+                    break
+            if !blocked:
+                player.move(dest_x, dest_y)
         Tile.Door:
             level.set_tile(dest_x, dest_y, Tile.Ground)
 
