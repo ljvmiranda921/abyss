@@ -10,6 +10,7 @@ var start_room: Rect2
 # Containers
 var map = []
 var rooms = []
+var enemies = []
 
 # Node references
 onready var tile_map = $TileMap
@@ -69,6 +70,23 @@ func update_visibility_map(player_tile: Vector2, tile_size: int):
                     visibility_map.set_cell(x, y, -1)
 
 
+func add_enemies(game, level_num, num_enemies):
+    for i in range(num_enemies):
+        var room = rooms[1 + randi() % (rooms.size() - 1)]
+        var x = room.position.x + 1 + randi() % int(room.size.x - 2)
+        var y = room.position.y + 1 + randi() % int(room.size.y - 2)
+
+        var blocked = false
+        for enemy in enemies:
+            if enemy.tile_coord.x == x && enemy.tile_coord.y == y:
+                blocked = true
+                break
+
+        if !blocked:
+            var enemy = EnemyFactory.spawn_enemy(game, level_num, x, y)
+            enemies.append(enemy)
+
+
 func _tile_to_pixel_center(x, y, tile_size: int):
     return Vector2((x + 0.5) * tile_size, (y + 0.5) * tile_size)
 
@@ -77,6 +95,11 @@ func build_level():
     rooms.clear()
     map.clear()
     tile_map.clear()
+
+    for enemy in enemies:
+        enemy.remove()
+    enemies.clear()
+
 
     for x in range(level_size.x):
         map.append([])

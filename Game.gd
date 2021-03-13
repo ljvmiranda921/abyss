@@ -30,6 +30,9 @@ func _ready():
     player.set_tile_coord(start_coord) 
     call_deferred("update_visuals")
 
+    # Add enemies and place in level
+    level.add_enemies(self, level_num, 10)
+
 
 func _input(event):
     if !event.is_pressed():
