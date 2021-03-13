@@ -15,7 +15,7 @@ const FOREST_ENEMIES = [
     {
         "name": "Plantera",
         "scene": PlanteraScene, 
-        "spawn_probs": 0.15,
+        "spawn_probs": 0.25,
         "acc_weight": 0.0, 
     },
     {
@@ -60,8 +60,10 @@ static func pick_some_object(basket, total_weight) -> Dictionary:
 class Enemy extends Reference:
     var sprite_node
     var tile_coord
+    var dead = false
 
     func _init(game, sprite_scene, x, y, tile_size):
+        dead = false
         sprite_node = sprite_scene.instance()
         tile_coord = Vector2(x, y)
         sprite_node.position = tile_coord * tile_size
