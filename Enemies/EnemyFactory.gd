@@ -69,3 +69,28 @@ class Enemy extends Reference:
 
     func remove():
         sprite_node.queue_free()
+
+
+    func act(level, player):
+        if !sprite_node.visible:
+            return
+
+
+        var enemy_pos = level.enemy_pathfinding.get_closest_point(Vector3(tile_coord.x, tile_coord.y, 0))
+        var player_pos = level.enemy_pathfinding.get_closest_point(Vector3(player.tile_coord.x, player.tile_coord.y, 0))
+        var path = level.enemy_pathfinding.get_point_path(enemy_pos, player_pos)
+
+        if path:
+            assert(path.size() > 1)
+            var move_tile = Vector2(path[1].x, path[1].y)
+            if move_tile == player.tile_coord:
+                # TODO: Attack player
+                print_debug("TODO: Attack player")
+            else:
+                var blocked = false
+                for enemy in level.enemies:
+                    if enemy.tile_coord == move_tile:
+                        blocked = true
+                        break
+                if !blocked:
+                    tile_coord = move_tile
