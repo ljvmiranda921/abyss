@@ -95,4 +95,8 @@ class Enemy extends Reference:
                         blocked = true
                         break
                 if !blocked:
+                    if tile_coord.x - move_tile.x > 0:
+                        sprite_node.set_flip_h(true)
+                    if tile_coord.x - move_tile.x < 0:
+                        sprite_node.set_flip_h(false)
                     tile_coord = move_tile
