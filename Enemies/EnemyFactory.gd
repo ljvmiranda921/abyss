@@ -11,18 +11,21 @@ const FOREST_ENEMIES = [
         "scene": MonkeyScene,
         "spawn_probs": 0.35,
         "acc_weight": 0.0, 
+        "line_of_sight": 3
     },
     {
         "name": "Plantera",
         "scene": PlanteraScene, 
-        "spawn_probs": 0.25,
+        "spawn_probs": 0.3,
         "acc_weight": 0.0, 
+        "line_of_sight": 2
     },
     {
         "name": "BeeSoldier",
         "scene": BeeScene,
         "spawn_probs": 0.50,
         "acc_weight": 0.0, 
+        "line_of_sight": 6
     },
 ]
 
@@ -38,7 +41,7 @@ static func spawn_enemy(game, level_num, x, y):
     var total_weight = init_probabilities(mobs)
     var enemy_def = pick_some_object(mobs, total_weight)
 
-    var enemy = Enemy.new(game, enemy_def.scene, x, y, 32)
+    var enemy = Enemy.new(game, enemy_def.scene, enemy_def, x, y, 32)
     return enemy
 
 static func init_probabilities(basket) -> float:
@@ -61,12 +64,14 @@ class Enemy extends Reference:
     var sprite_node
     var tile_coord
     var dead = false
+    var line_of_sight
 
-    func _init(game, sprite_scene, x, y, tile_size):
+    func _init(game, sprite_scene, enemy_config, x, y, tile_size):
         dead = false
         sprite_node = sprite_scene.instance()
         tile_coord = Vector2(x, y)
         sprite_node.position = tile_coord * tile_size
+        line_of_sight = enemy_config.line_of_sight
         game.add_child(sprite_node)
 
     func remove():
@@ -95,8 +100,24 @@ class Enemy extends Reference:
                         blocked = true
                         break
                 if !blocked:
+                    # Set enemy sprite orientation
                     if tile_coord.x - move_tile.x > 0:
                         sprite_node.set_flip_h(true)
                     if tile_coord.x - move_tile.x < 0:
                         sprite_node.set_flip_h(false)
-                    tile_coord = move_tile
+
+                    # Check if within line-of-sight
+                    if self._player_is_visible(player.tile_coord):
+                        tile_coord = move_tile
+
+
+    func _player_is_visible(player_tile):
+        var dx = pow(player_tile.x - tile_coord.x, 2)
+        var dy = pow(player_tile.y - tile_coord.y, 2)
+        var r_2 = pow(line_of_sight, 2)
+        if dx + dy <= r_2:
+            return true
+        else:
+            return false
+        
+
