@@ -61,6 +61,8 @@ func handle_directional_input(dx, dy):
                 if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
                     # TODO: Player attack
                     print_debug("TODO: Player attack!")
+                    var pos_offset = Vector2(dx * TILE_SIZE / 3, dy * TILE_SIZE / 3)
+                    player.attack(pos_offset)
                     if enemy.dead:
                         enemy.remove()
                         level.enemies.erase(enemy)
@@ -76,16 +78,14 @@ func handle_directional_input(dx, dy):
     for enemy in level.enemies:
         enemy.act(level, player)
 
-
     call_deferred("update_visuals")
 
 
 func update_visuals():
+    
     player.position = player.tile_coord * TILE_SIZE
     yield(get_tree(), "idle_frame")
-
 
     var space_state = get_world_2d().direct_space_state
     level.update_visibility_map(player.tile_coord, TILE_SIZE, space_state)
     level.update_enemy_positions(player.tile_coord, TILE_SIZE, space_state)
-
