@@ -93,7 +93,10 @@ class Enemy extends Reference:
         game.add_child(sprite_node)
 
     func remove():
-        sprite_node.queue_free()
+        sprite_node.play("death")
+        if sprite_node.animation == "death" && sprite_node.frame == sprite_node.frames.get_frame_count("death")-1:
+            sprite_node.queue_free()
+            print_debug("enemy death")
 
 
     func act(level, player):
@@ -123,8 +126,8 @@ class Enemy extends Reference:
         var dx = (player.tile_coord.x - tile_coord.x) 
         var dy = (player.tile_coord.y - tile_coord.y)
         sprite_node.play("attack")
-        sprite_node.set_offset(Vector2(dx * TILE_SIZE / 3,dy * TILE_SIZE / 3))
-        sprite_node.z_index = 0
+        sprite_node.set_offset(Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4))
+        sprite_node.z_index = 100
 
         # Send damage to player
         player.take_damage(attack_dmg)
@@ -135,7 +138,6 @@ class Enemy extends Reference:
             return
 
         current_hp = max(0, current_hp - dmg)
-
         if current_hp == 0:
             dead = true
 
