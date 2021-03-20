@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 # Variables set by init
 var hp: int = 100
+var damage: int = 30
 
 # Containers
 var tile_coord: Vector2
@@ -13,6 +14,7 @@ func _ready():
 
 func init(hp):
     self.hp = hp
+    self.damage = damage
 
 func set_tile_coord(coord: Vector2):
     tile_coord = coord
@@ -21,21 +23,31 @@ func move(dest_x, dest_y):
     tile_coord = Vector2(dest_x, dest_y)
 
 
-func attack(anim_offset):
+func attack(enemy, anim_offset):
     # Update animation
     sprite_anim.play("attack")
     sprite_anim.set_offset(anim_offset)
     self.z_index = 100
 
     # Apply actual damage to enemy
+    enemy.take_damage(damage)
 
 
-func take_damage():
+
+func take_damage(dmg):
     # Update animation
     if sprite_anim.animation == "walk": 
         # Only play damage when you're not attacking
         # If you're attacking just combat anim
         sprite_anim.play("take_damage")
+
+    # Resolve damage encounter
+    hp = max(0, hp - dmg)
+    print_debug(hp)
+    if hp == 0:
+        print_debug("TODO: You are Dead")
+
+
 
 
 func _on_AnimatedSprite_animation_finished():
