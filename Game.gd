@@ -59,7 +59,7 @@ func handle_directional_input(dx, dy):
             var blocked = false
             for enemy in level.enemies:
                 if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
-                    var pos_offset = Vector2(dx * TILE_SIZE / 3, dy * TILE_SIZE / 3)
+                    var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
                     combat_player_turn(player, enemy, pos_offset)
                     blocked = true
                     break
