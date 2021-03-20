@@ -68,7 +68,7 @@ func handle_directional_input(dx, dy):
         Tile.Door:
             level.set_tile(dest_x, dest_y, Tile.Ground)
 
-    # Player animation attack done
+    # Enemy turn
     for enemy in level.enemies:
         enemy.act(level, player)
 

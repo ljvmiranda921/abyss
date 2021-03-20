@@ -140,7 +140,6 @@ class Enemy extends Reference:
             dead = true
 
 
-
     func _move(current_pos, dest_pos, enemy_node, player_tile):
         # Set enemy sprite orientation
         if current_pos.x - dest_pos.x > 0:
@@ -148,7 +147,7 @@ class Enemy extends Reference:
         if current_pos.x - dest_pos.x < 0:
             enemy_node.set_flip_h(false)
 
-        # Move if player is within line of sight
+        # Move if player if within line of sight
         if self._player_is_visible(player_tile):
             tile_coord = dest_pos
 
