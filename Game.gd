@@ -59,13 +59,8 @@ func handle_directional_input(dx, dy):
             var blocked = false
             for enemy in level.enemies:
                 if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
-                    # TODO: Player attack
-                    print_debug("TODO: Player attack!")
                     var pos_offset = Vector2(dx * TILE_SIZE / 3, dy * TILE_SIZE / 3)
-                    player.attack(pos_offset)
-                    if enemy.dead:
-                        enemy.remove()
-                        level.enemies.erase(enemy)
+                    combat_player_turn(player, enemy, pos_offset)
                     blocked = true
                     break
             if !blocked:
@@ -73,16 +68,20 @@ func handle_directional_input(dx, dy):
         Tile.Door:
             level.set_tile(dest_x, dest_y, Tile.Ground)
 
-
-    # Enemy turn
+    # Player animation attack done
     for enemy in level.enemies:
         enemy.act(level, player)
 
     call_deferred("update_visuals")
 
+func combat_player_turn(player, enemy, anim_offset):
+    player.attack(anim_offset)
+    if enemy.dead:
+        enemy.remove()
+        level.enemies.erase(enemy)
+    
 
 func update_visuals():
-    
     player.position = player.tile_coord * TILE_SIZE
     yield(get_tree(), "idle_frame")
 

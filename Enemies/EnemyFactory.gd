@@ -4,6 +4,8 @@ const MonkeyScene = preload("res://Enemies/ForestEnemies/EnemyMonkey.tscn")
 const PlanteraScene = preload("res://Enemies/ForestEnemies/EnemyPlantera.tscn")
 const BeeScene = preload("res://Enemies/ForestEnemies/EnemyBee.tscn")
 
+const TILE_SIZE = 32
+
 
 const FOREST_ENEMIES = [
     {
@@ -82,7 +84,6 @@ class Enemy extends Reference:
         if !sprite_node.visible:
             return
 
-
         var enemy_pos = level.enemy_pathfinding.get_closest_point(Vector3(tile_coord.x, tile_coord.y, 0))
         var player_pos = level.enemy_pathfinding.get_closest_point(Vector3(player.tile_coord.x, player.tile_coord.y, 0))
         var path = level.enemy_pathfinding.get_point_path(enemy_pos, player_pos)
@@ -91,8 +92,7 @@ class Enemy extends Reference:
             assert(path.size() > 1)
             var move_tile = Vector2(path[1].x, path[1].y)
             if move_tile == player.tile_coord:
-                # TODO: Attack player
-                print_debug("TODO: Attack player")
+                self._attack(player, TILE_SIZE)
             else:
                 var blocked = false
                 for enemy in level.enemies:
@@ -100,16 +100,30 @@ class Enemy extends Reference:
                         blocked = true
                         break
                 if !blocked:
-                    # Set enemy sprite orientation
-                    if tile_coord.x - move_tile.x > 0:
-                        sprite_node.set_flip_h(true)
-                    if tile_coord.x - move_tile.x < 0:
-                        sprite_node.set_flip_h(false)
+                    self._move(tile_coord, move_tile, sprite_node, player.tile_coord)
 
-                    # Check if within line-of-sight
-                    if self._player_is_visible(player.tile_coord):
-                        tile_coord = move_tile
+    func _attack(player, tile_size):
+        # Update enemy animations
+        var dx = (player.tile_coord.x - tile_coord.x) 
+        var dy = (player.tile_coord.y - tile_coord.y)
+        sprite_node.play("attack")
+        sprite_node.set_offset(Vector2(dx * TILE_SIZE / 3,dy * TILE_SIZE / 3))
+        sprite_node.z_index = 0
 
+        # Send damage to player
+        player.take_damage()
+
+
+    func _move(current_pos, dest_pos, enemy_node, player_tile):
+        # Set enemy sprite orientation
+        if current_pos.x - dest_pos.x > 0:
+            enemy_node.set_flip_h(true)
+        if current_pos.x - dest_pos.x < 0:
+            enemy_node.set_flip_h(false)
+
+        # Move if player is within line of sight
+        if self._player_is_visible(player_tile):
+            tile_coord = dest_pos
 
     func _player_is_visible(player_tile):
         var dx = pow(player_tile.x - tile_coord.x, 2)
