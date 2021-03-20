@@ -13,21 +13,27 @@ const FOREST_ENEMIES = [
         "scene": MonkeyScene,
         "spawn_probs": 0.35,
         "acc_weight": 0.0, 
-        "line_of_sight": 3
+        "line_of_sight": 3,
+        "hp": 105, 
+        "damage": 20
     },
     {
         "name": "Plantera",
         "scene": PlanteraScene, 
         "spawn_probs": 0.3,
         "acc_weight": 0.0, 
-        "line_of_sight": 2
+        "line_of_sight": 2,
+        "hp": 110,
+        "damage": 40
     },
     {
         "name": "BeeSoldier",
         "scene": BeeScene,
         "spawn_probs": 0.50,
         "acc_weight": 0.0, 
-        "line_of_sight": 6
+        "line_of_sight": 6,
+        "hp": 60,
+        "damage": 10
     },
 ]
 
@@ -43,7 +49,7 @@ static func spawn_enemy(game, level_num, x, y):
     var total_weight = init_probabilities(mobs)
     var enemy_def = pick_some_object(mobs, total_weight)
 
-    var enemy = Enemy.new(game, enemy_def.scene, enemy_def, x, y, 32)
+    var enemy = Enemy.new(game, enemy_def.hp, enemy_def.damage, enemy_def.scene, enemy_def, x, y, 32)
     return enemy
 
 static func init_probabilities(basket) -> float:
@@ -67,13 +73,23 @@ class Enemy extends Reference:
     var tile_coord
     var dead = false
     var line_of_sight
+    var full_hp
+    var current_hp
+    var attack_dmg
 
-    func _init(game, sprite_scene, enemy_config, x, y, tile_size):
-        dead = false
+    func _init(game, hp, damage, sprite_scene, enemy_config, x, y, tile_size):
         sprite_node = sprite_scene.instance()
+        # Setup enemy movement
         tile_coord = Vector2(x, y)
         sprite_node.position = tile_coord * tile_size
         line_of_sight = enemy_config.line_of_sight
+        # Setup enemy HP and logic
+        dead = false
+        full_hp = hp
+        current_hp = full_hp
+        # Setup enemy combat
+        attack_dmg = damage
+        
         game.add_child(sprite_node)
 
     func remove():
@@ -111,7 +127,18 @@ class Enemy extends Reference:
         sprite_node.z_index = 0
 
         # Send damage to player
-        player.take_damage()
+        player.take_damage(attack_dmg)
+
+
+    func take_damage(dmg):
+        if dead:
+            return
+
+        current_hp = max(0, current_hp - dmg)
+
+        if current_hp == 0:
+            dead = true
+
 
 
     func _move(current_pos, dest_pos, enemy_node, player_tile):

@@ -75,7 +75,7 @@ func handle_directional_input(dx, dy):
     call_deferred("update_visuals")
 
 func combat_player_turn(player, enemy, anim_offset):
-    player.attack(anim_offset)
+    player.attack(enemy, anim_offset)
     if enemy.dead:
         enemy.remove()
         level.enemies.erase(enemy)
