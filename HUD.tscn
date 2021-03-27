@@ -8,30 +8,30 @@
 script = ExtResource( 3 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 139.0
-margin_bottom = 172.0
+margin_left = 23.0
+margin_top = 22.0
+margin_right = 149.0
+margin_bottom = 181.0
 color = Color( 0.25098, 0.168627, 0.333333, 0.270588 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 12.015
-margin_top = 9.09042
-margin_right = 140.015
-margin_bottom = 171.09
+margin_left = 22.1058
+margin_top = 20.863
+margin_right = 150.106
+margin_bottom = 182.863
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Level" type="RichTextLabel" parent="."]
-margin_left = 35.0
-margin_top = 51.0
-margin_right = 119.0
-margin_bottom = 75.0
+margin_left = 45.0908
+margin_top = 62.7726
+margin_right = 129.091
+margin_bottom = 86.7726
 custom_fonts/normal_font = ExtResource( 2 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 text = "Level"
@@ -40,10 +40,10 @@ __meta__ = {
 }
 
 [node name="HP" type="RichTextLabel" parent="."]
-margin_left = 35.0
-margin_top = 83.0
-margin_right = 119.0
-margin_bottom = 112.0
+margin_left = 45.0908
+margin_top = 94.7726
+margin_right = 129.091
+margin_bottom = 123.773
 custom_fonts/normal_font = ExtResource( 2 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 text = "HP"
@@ -52,10 +52,10 @@ __meta__ = {
 }
 
 [node name="Damage" type="RichTextLabel" parent="."]
-margin_left = 34.0
-margin_top = 115.0
-margin_right = 121.0
-margin_bottom = 144.0
+margin_left = 44.0908
+margin_top = 126.773
+margin_right = 131.091
+margin_bottom = 155.773
 custom_fonts/normal_font = ExtResource( 2 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 text = "Dmg"
