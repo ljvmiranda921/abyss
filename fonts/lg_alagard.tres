@@ -1,0 +1,10 @@
+[gd_resource type="DynamicFont" load_steps=2 format=2]
+
+[sub_resource type="DynamicFontData" id=1]
+antialiased = false
+font_path = "res://fonts/alagard.ttf"
+
+[resource]
+size = 64
+outline_color = Color( 0.0117647, 0.00392157, 0.00392157, 0 )
+font_data = SubResource( 1 )
