@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://art/HUD.png" type="Texture" id=1]
 [ext_resource path="res://fonts/alagard.tres" type="DynamicFont" id=2]
 [ext_resource path="res://HUD.gd" type="Script" id=3]
+[ext_resource path="res://fonts/lg_alagard.tres" type="DynamicFont" id=4]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 3 )
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="PlayerInfoBoxGrad" type="ColorRect" parent="."]
 margin_left = 23.0
 margin_top = 22.0
 margin_right = 149.0
@@ -17,7 +18,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="PlayerInfoBox" type="TextureRect" parent="."]
 margin_left = 22.1058
 margin_top = 20.863
 margin_right = 150.106
@@ -62,3 +63,42 @@ text = "Dmg"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="LoseScreen" type="ColorRect" parent="."]
+visible = false
+margin_left = -5.0
+margin_top = -2.0
+margin_right = 647.0
+margin_bottom = 364.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="LoseScreen"]
+margin_left = 270.854
+margin_top = 241.499
+margin_right = 382.854
+margin_bottom = 277.499
+custom_fonts/font = ExtResource( 2 )
+text = "Restart"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="LoseScreen"]
+margin_left = 98.5052
+margin_top = 88.4949
+margin_right = 548.505
+margin_bottom = 219.495
+size_flags_stretch_ratio = 0.0
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 0.901961, 0.305882, 0.294118, 1 )
+text = "YOU DIED"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="LoseScreen/Button" to="." method="_on_Button_pressed"]

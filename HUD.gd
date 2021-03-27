@@ -3,6 +3,9 @@ extends CanvasLayer
 onready var level = $Level
 onready var hp = $HP
 onready var dmg = $Damage
+onready var lose = $LoseScreen
+
+signal restart_game
 
 func set_level(val):
     level.text =  "Level " + str(val+1)
@@ -16,3 +19,6 @@ func set_hp(val):
 
 func set_dmg(val):
     dmg.text = "Dmg " + str(val)
+
+func _on_Button_pressed():
+    emit_signal("restart_game")
