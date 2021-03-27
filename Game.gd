@@ -9,7 +9,8 @@ const LEVEL_SIZES = [
 ]
 
 # Game state containers
-var level_num: int = 0
+var starting_level: int = 0
+var starting_hp: int = 100
 
 # Tilemap reference
 enum Tile { OuterWall, InnerWall, Ground, Door }
@@ -21,23 +22,37 @@ onready var hud = preload("res://HUD.tscn").instance()
 
 func _ready():
     OS.set_window_size(Vector2(1280, 720))
-    level.init(LEVEL_SIZES[level_num], 5, 5, 8)
-    player.init(100)
+
+    # Add the scenes so that they appear in
+    # the Game tree
     add_child(hud)
     add_child(level)
     add_child(player)
 
-    hud.set_level(level_num)
+    # Start game at Level 0
+    start_game(starting_level)
+
+    # Connect to signals emitted by other
+    # scenes in the game
+    hud.connect("restart_game", self, "recv_restart_game")
+
+
+
+func start_game(lvl):
+
+    level.init(LEVEL_SIZES[lvl], 5, 5, 8)
+    player.init(starting_hp)
+
+    hud.set_level(lvl)
     hud.set_hp(player.hp)
     hud.set_dmg(player.damage)
 
     # Add player and place in level
-    var start_coord = level.get_start_coord()
-    player.set_tile_coord(start_coord) 
+    player.set_tile_coord(level.get_start_coord()) 
     call_deferred("update_visuals")
 
     # Add enemies and place in level
-    level.add_enemies(self, level_num, 10)
+    level.add_enemies(self, lvl, 10)
 
 
 func _input(event):
@@ -54,6 +69,8 @@ func _input(event):
         handle_directional_input(0, -1)
     elif event.is_action("Down"):
         handle_directional_input(0, 1)
+
+
 
 func handle_directional_input(dx, dy):
     # Player turn 
@@ -85,9 +102,12 @@ func combat_player_turn(player, enemy, anim_offset):
     if enemy.dead:
         enemy.remove()
         level.enemies.erase(enemy)
-    
+
 
 func update_visuals():
+    if player.dead:
+        hud.lose.visible = true
+
     player.position = player.tile_coord * TILE_SIZE
     yield(get_tree(), "idle_frame")
 
@@ -98,3 +118,9 @@ func update_visuals():
     # Update HUD
     hud.set_hp(player.hp)
     hud.set_dmg(player.damage)
+
+
+func recv_restart_game():
+    start_game(starting_level)
+    hud.lose.visible = false
+    print_debug("RESTART")
