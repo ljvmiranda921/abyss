@@ -32,10 +32,10 @@ __meta__ = {
 }
 
 [node name="Level" type="RichTextLabel" parent="CanvasLayer"]
-margin_left = 35.1022
-margin_top = 51.1409
-margin_right = 95.1022
-margin_bottom = 75.1409
+margin_left = 35.0
+margin_top = 51.0
+margin_right = 119.0
+margin_bottom = 75.0
 custom_fonts/normal_font = ExtResource( 5 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 text = "Level"
@@ -44,10 +44,10 @@ __meta__ = {
 }
 
 [node name="HP" type="RichTextLabel" parent="CanvasLayer"]
-margin_left = 35.4054
-margin_top = 83.3036
-margin_right = 75.4054
-margin_bottom = 112.304
+margin_left = 35.0
+margin_top = 83.0
+margin_right = 119.0
+margin_bottom = 112.0
 custom_fonts/normal_font = ExtResource( 5 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 text = "HP"
@@ -56,10 +56,10 @@ __meta__ = {
 }
 
 [node name="Damage" type="RichTextLabel" parent="CanvasLayer"]
-margin_left = 33.7386
-margin_top = 114.943
-margin_right = 81.7386
-margin_bottom = 143.943
+margin_left = 34.0
+margin_top = 115.0
+margin_right = 121.0
+margin_bottom = 144.0
 custom_fonts/normal_font = ExtResource( 5 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 text = "Dmg"
