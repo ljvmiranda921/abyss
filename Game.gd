@@ -17,13 +17,19 @@ enum Tile { OuterWall, InnerWall, Ground, Door }
 # Scene instances
 onready var level = preload("res://Level/Forest.tscn").instance()
 onready var player = preload("res://Player/Player.tscn").instance()
+onready var hud = preload("res://HUD.tscn").instance()
 
 func _ready():
     OS.set_window_size(Vector2(1280, 720))
     level.init(LEVEL_SIZES[level_num], 5, 5, 8)
     player.init(100)
+    add_child(hud)
     add_child(level)
     add_child(player)
+
+    hud.set_level(level_num)
+    hud.set_hp(player.hp)
+    hud.set_dmg(player.damage)
 
     # Add player and place in level
     var start_coord = level.get_start_coord()
@@ -88,3 +94,7 @@ func update_visuals():
     var space_state = get_world_2d().direct_space_state
     level.update_visibility_map(player.tile_coord, TILE_SIZE, space_state)
     level.update_enemy_positions(player.tile_coord, TILE_SIZE, space_state)
+
+    # Update HUD
+    hud.set_hp(player.hp)
+    hud.set_dmg(player.damage)

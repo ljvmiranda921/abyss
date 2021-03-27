@@ -1,16 +1,15 @@
 extends CanvasLayer
 
+onready var level = $Level
+onready var hp = $HP
+onready var dmg = $Damage
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+func set_level(val):
+    level.text =  "Level " + str(val+1)
 
+func set_hp(val):
+    hp.text = "HP " + str(val)
+    # TODO: modulate red if less than 30
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-    pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#    pass
+func set_dmg(val):
+    dmg.text = "Dmg " + str(val)
