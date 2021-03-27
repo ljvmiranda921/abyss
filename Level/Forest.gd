@@ -21,8 +21,7 @@ onready var visibility_map = $VisibilityMap
 enum Tile { OuterWall, InnerWall, Ground, Door }
 
 func _ready():
-    randomize()
-    build_level()
+    pass
     
 
 func init(size, room_count, min_room_dim, max_room_dim):
@@ -30,6 +29,9 @@ func init(size, room_count, min_room_dim, max_room_dim):
     self.room_count = room_count
     self.min_room_dim = min_room_dim
     self.max_room_dim = max_room_dim
+
+    randomize()
+    build_level()
 
 
 func get_tile_type(x, y) -> int:
