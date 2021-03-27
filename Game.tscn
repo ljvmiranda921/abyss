@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Level/Forest.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Game.gd" type="Script" id=3]
 [ext_resource path="res://art/HUD.png" type="Texture" id=4]
+[ext_resource path="res://fonts/alagard.tres" type="DynamicFont" id=5]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 3 )
@@ -21,11 +22,47 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
-margin_left = 11.0
-margin_top = 10.0
-margin_right = 139.0
-margin_bottom = 172.0
+margin_left = 12.015
+margin_top = 9.09042
+margin_right = 140.015
+margin_bottom = 171.09
 texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Level" type="RichTextLabel" parent="CanvasLayer"]
+margin_left = 35.1022
+margin_top = 51.1409
+margin_right = 95.1022
+margin_bottom = 75.1409
+custom_fonts/normal_font = ExtResource( 5 )
+custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
+text = "Level"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HP" type="RichTextLabel" parent="CanvasLayer"]
+margin_left = 35.4054
+margin_top = 83.3036
+margin_right = 75.4054
+margin_bottom = 112.304
+custom_fonts/normal_font = ExtResource( 5 )
+custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
+text = "HP"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Damage" type="RichTextLabel" parent="CanvasLayer"]
+margin_left = 33.7386
+margin_top = 114.943
+margin_right = 81.7386
+margin_bottom = 143.943
+custom_fonts/normal_font = ExtResource( 5 )
+custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
+text = "Dmg"
 __meta__ = {
 "_edit_use_anchors_": false
 }
