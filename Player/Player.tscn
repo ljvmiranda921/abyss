@@ -1,7 +1,9 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://art/Character.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
+[ext_resource path="res://Player/ScreenShake.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Player/Camera2D.gd" type="Script" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -80,7 +82,7 @@ script = ExtResource( 2 )
 position = Vector2( 16, 16 )
 frames = SubResource( 14 )
 animation = "walk"
-frame = 3
+frame = 2
 playing = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -89,4 +91,7 @@ drag_margin_left = 0.0
 drag_margin_top = 0.0
 drag_margin_right = 0.0
 drag_margin_bottom = 0.0
+script = ExtResource( 4 )
+
+[node name="ScreenShake" parent="Camera2D" instance=ExtResource( 3 )]
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]

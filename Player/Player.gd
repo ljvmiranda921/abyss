@@ -30,6 +30,7 @@ func attack(enemy, anim_offset):
     sprite_anim.play("attack")
     sprite_anim.set_offset(anim_offset)
     self.z_index = 100
+    $Camera2D.small_shake()
 
     # Apply actual damage to enemy
     enemy.take_damage(damage)
@@ -41,6 +42,7 @@ func take_damage(dmg):
         # Only play damage when you're not attacking
         # If you're attacking just combat anim
         sprite_anim.play("take_damage")
+        $Camera2D.small_shake()
 
     # Resolve damage encounter
     hp = max(0, hp - dmg)
