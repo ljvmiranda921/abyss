@@ -27,13 +27,19 @@ func move(dest_x, dest_y):
 
 func attack(enemy, anim_offset):
     # Update animation
-    sprite_anim.play("attack")
-    sprite_anim.set_offset(anim_offset)
-    self.z_index = 100
-    $Camera2D.small_shake()
+    _animate_attack(sprite_anim, enemy, anim_offset)
 
     # Apply actual damage to enemy
     enemy.take_damage(damage)
+
+func _animate_attack(player, enemy, offset):
+    player.play("attack")
+    player.set_offset(offset)
+    self.z_index = 100
+    $SlashEffect.play("default")
+    $SlashEffect.set_frame(0)
+    $SlashEffect.set_offset(offset * 1.824)
+    $Camera2D.small_shake()
 
 
 func take_damage(dmg):
