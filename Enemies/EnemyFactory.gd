@@ -14,8 +14,8 @@ const FOREST_ENEMIES = [
         "spawn_probs": 0.35,
         "acc_weight": 0.0, 
         "line_of_sight": 3,
-        "hp": 105, 
-        "damage": 20
+        "hp": 75, 
+        "damage": 15
     },
     {
         "name": "Plantera",
@@ -23,8 +23,8 @@ const FOREST_ENEMIES = [
         "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 2,
-        "hp": 110,
-        "damage": 40
+        "hp": 60,
+        "damage": 25
     },
     {
         "name": "BeeSoldier",
