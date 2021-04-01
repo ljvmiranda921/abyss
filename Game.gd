@@ -62,9 +62,11 @@ func _input(event):
     if event.is_action("Left"):
         handle_directional_input(-1, 0)
         player.get_node("AnimatedSprite").set_flip_h(true)
+        player.get_node("SlashEffect").set_flip_h(true)
     elif event.is_action("Right"):
         handle_directional_input(1, 0)
         player.get_node("AnimatedSprite").set_flip_h(false)
+        player.get_node("SlashEffect").set_flip_h(false)
     elif event.is_action("Up"):
         handle_directional_input(0, -1)
     elif event.is_action("Down"):
