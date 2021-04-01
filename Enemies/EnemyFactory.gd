@@ -127,7 +127,7 @@ class Enemy extends Reference:
         var dy = (player.tile_coord.y - tile_coord.y)
         sprite_node.play("attack")
         sprite_node.set_offset(Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4))
-        sprite_node.z_index = 100
+        # sprite_node.z_index = 100
 
         # Send damage to player
         player.take_damage(attack_dmg)
