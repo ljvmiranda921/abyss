@@ -125,4 +125,3 @@ func update_visuals():
 func recv_restart_game():
     start_game(starting_level)
     hud.lose.visible = false
-    print_debug("RESTART")
