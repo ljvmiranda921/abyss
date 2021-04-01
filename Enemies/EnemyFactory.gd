@@ -77,6 +77,9 @@ class Enemy extends Reference:
     var current_hp
     var attack_dmg
 
+    # Status
+    var in_pursuit
+
     func _init(game, hp, damage, sprite_scene, enemy_config, x, y, tile_size):
         sprite_node = sprite_scene.instance()
         # Setup enemy movement
@@ -149,8 +152,13 @@ class Enemy extends Reference:
         if current_pos.x - dest_pos.x < 0:
             enemy_node.set_flip_h(false)
 
-        # Move if player if within line of sight
+        # Move if player is within line of sight
         if self._player_is_visible(player_tile):
+
+            if !in_pursuit:
+                in_pursuit = true
+                enemy_node.los_effect.set_frame(0)
+                enemy_node.los_effect.play("default")
             tile_coord = dest_pos
 
     func _player_is_visible(player_tile):

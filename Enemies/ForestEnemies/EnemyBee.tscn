@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=20 format=2]
 
+[ext_resource path="res://art/EffectLOS.png" type="Texture" id=1]
 [ext_resource path="res://Enemies/ForestEnemies/EnemyBee.gd" type="Script" id=2]
 [ext_resource path="res://art/enemies/EnemyBee.png" type="Texture" id=3]
 
@@ -57,11 +58,47 @@ animations = [ {
 "speed": 5.0
 } ]
 
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 32, 48 )
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 0, 32, 48 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 1 )
+region = Rect2( 64, 0, 32, 48 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 32, 48 )
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 32, 48 )
+
+[sub_resource type="SpriteFrames" id=15]
+animations = [ {
+"frames": [ null, SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 16 ), null ],
+"loop": false,
+"name": "default",
+"speed": 10.0
+} ]
+
 [node name="AnimatedSprite" type="AnimatedSprite"]
 visible = false
 frames = SubResource( 10 )
+frame = 1
 speed_scale = 2.0
 playing = true
 centered = false
 script = ExtResource( 2 )
+
+[node name="LOSEffect" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.7, 0.7 )
+frames = SubResource( 15 )
+frame = 6
+centered = false
+offset = Vector2( 10, -30 )
 [connection signal="animation_finished" from="." to="." method="_on_AnimatedSprite_animation_finished"]
