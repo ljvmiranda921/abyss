@@ -1,5 +1,6 @@
 extends AnimatedSprite
 
+onready var los_effect = $LOSEffect
 
 func _on_AnimatedSprite_animation_finished():
     if self.animation != "default" && self.animation != "death":
