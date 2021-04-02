@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "GitAPI",
 "language": "NativeScript",
 "path": "res://git_api.gdns"
+}, {
+"base": "Reference",
+"class": "ItemFactory",
+"language": "GDScript",
+"path": "res://Items/ItemFactory.gd"
 } ]
 _global_script_class_icons={
 "EnemyFactory": "",
-"GitAPI": ""
+"GitAPI": "",
+"ItemFactory": ""
 }
 
 [application]
