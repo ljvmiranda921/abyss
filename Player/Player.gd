@@ -32,6 +32,14 @@ func attack(enemy, anim_offset):
     # Apply actual damage to enemy
     enemy.take_damage(damage)
 
+
+func pickup(item):
+    # Call effect
+    item.use_effect(self)
+    # Remove
+    item.remove()
+
+
 func _animate_attack(player, enemy, offset):
     player.play("attack")
     player.set_offset(offset)
