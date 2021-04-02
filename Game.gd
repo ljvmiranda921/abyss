@@ -73,7 +73,6 @@ func _input(event):
         handle_directional_input(0, 1)
 
 
-
 func handle_directional_input(dx, dy):
     # Player turn 
     var dest_x = player.tile_coord.x + dx
@@ -90,6 +89,10 @@ func handle_directional_input(dx, dy):
                     break
             if !blocked:
                 player.move(dest_x, dest_y)
+                var item = scan_for_items(dest_x, dest_y)
+                if item:
+                    player.pickup(item)
+                    level.items.erase(item)
         Tile.Door:
             level.set_tile(dest_x, dest_y, Tile.Ground)
 
@@ -98,6 +101,12 @@ func handle_directional_input(dx, dy):
         enemy.act(level, player)
 
     call_deferred("update_visuals")
+
+
+func scan_for_items(x, y):
+    for item in level.items:
+        if item.tile_coord == Vector2(x, y):
+            return item
 
 func combat_player_turn(player, enemy, anim_offset):
     player.attack(enemy, anim_offset)
