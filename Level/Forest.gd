@@ -11,6 +11,7 @@ var start_room: Rect2
 var map = []
 var rooms = []
 var enemies = []
+var items = []
 var enemy_pathfinding
 
 # Node references
@@ -136,6 +137,10 @@ func build_level():
     for enemy in enemies:
         enemy.remove()
     enemies.clear()
+
+    for item in items:
+        item.remove()
+    items.clear()
 
 
     enemy_pathfinding = AStar.new()

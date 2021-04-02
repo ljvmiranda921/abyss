@@ -14,6 +14,7 @@ const FOREST_ENEMIES = [
         "spawn_probs": 0.35,
         "acc_weight": 0.0, 
         "line_of_sight": 3,
+        "drop_chance": 0.6,
         "hp": 75, 
         "damage": 15
     },
@@ -23,6 +24,7 @@ const FOREST_ENEMIES = [
         "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 2,
+        "drop_chance": 1.0,
         "hp": 60,
         "damage": 25
     },
@@ -32,6 +34,7 @@ const FOREST_ENEMIES = [
         "spawn_probs": 0.50,
         "acc_weight": 0.0, 
         "line_of_sight": 6,
+        "drop_chance": 0.3,
         "hp": 60,
         "damage": 10
     },
@@ -76,6 +79,8 @@ class Enemy extends Reference:
     var full_hp
     var current_hp
     var attack_dmg
+    var drop_chance
+    var game_class
 
     # Status
     var in_pursuit
@@ -90,6 +95,8 @@ class Enemy extends Reference:
         dead = false
         full_hp = hp
         current_hp = full_hp
+        drop_chance = enemy_config.drop_chance
+        game_class = game
         # Setup enemy combat
         attack_dmg = damage
         
@@ -99,8 +106,6 @@ class Enemy extends Reference:
         sprite_node.play("death")
         if sprite_node.animation == "death" && sprite_node.frame == sprite_node.frames.get_frame_count("death")-1:
             sprite_node.queue_free()
-            print_debug("enemy death")
-
 
     func act(level, player):
         if !sprite_node.visible:
@@ -143,6 +148,11 @@ class Enemy extends Reference:
         current_hp = max(0, current_hp - dmg)
         if current_hp == 0:
             dead = true
+
+            # Drop item
+            var probs = rand_range(0, 1)
+            if probs > (1 - drop_chance):
+                ItemFactory.drop_item(game_class, tile_coord.x, tile_coord.y)
 
 
     func _move(current_pos, dest_pos, enemy_node, player_tile):
