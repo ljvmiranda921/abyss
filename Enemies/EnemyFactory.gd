@@ -24,7 +24,7 @@ const FOREST_ENEMIES = [
         "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 2,
-        "drop_chance": 1.0,
+        "drop_chance": 0.70,
         "hp": 60,
         "damage": 25
     },
@@ -33,7 +33,7 @@ const FOREST_ENEMIES = [
         "scene": BeeScene,
         "spawn_probs": 0.50,
         "acc_weight": 0.0, 
-        "line_of_sight": 6,
+        "line_of_sight": 5,
         "drop_chance": 0.3,
         "hp": 60,
         "damage": 10
