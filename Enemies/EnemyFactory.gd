@@ -21,7 +21,7 @@ const FOREST_ENEMIES = [
     {
         "name": "Plantera",
         "scene": PlanteraScene, 
-        "spawn_probs": 100.3,
+        "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 2,
         "drop_chance": 1.0,
