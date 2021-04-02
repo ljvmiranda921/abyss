@@ -88,25 +88,25 @@ region = Rect2( 32, 0, 32, 32 )
 atlas = ExtResource( 5 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=22]
+[sub_resource type="AtlasTexture" id=18]
 atlas = ExtResource( 5 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=18]
+[sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 5 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=19]
+[sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 5 )
 region = Rect2( 128, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=20]
+[sub_resource type="AtlasTexture" id=21]
 atlas = ExtResource( 5 )
 region = Rect2( 160, 0, 32, 32 )
 
-[sub_resource type="SpriteFrames" id=21]
+[sub_resource type="SpriteFrames" id=22]
 animations = [ {
-"frames": [ null, SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 22 ), SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), null ],
+"frames": [ null, SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), SubResource( 21 ), null ],
 "loop": false,
 "name": "default",
 "speed": 8.23
@@ -119,7 +119,6 @@ script = ExtResource( 2 )
 position = Vector2( 16, 16 )
 frames = SubResource( 14 )
 animation = "walk"
-frame = 2
 playing = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -134,6 +133,6 @@ script = ExtResource( 4 )
 
 [node name="SlashEffect" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
-frames = SubResource( 21 )
+frames = SubResource( 22 )
 centered = false
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
