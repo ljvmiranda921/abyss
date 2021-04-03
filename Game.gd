@@ -127,7 +127,18 @@ func update_visuals():
     if player.dead:
         hud.lose.visible = true
 
-    player.position = player.tile_coord * TILE_SIZE
+
+    # player.position = player.tile_coord * TILE_SIZE
+    var destination = player.tile_coord * TILE_SIZE
+
+    # Add tweening
+    var move_tween = get_node("Tween")
+    move_tween.interpolate_property(player, "position", player.position, destination, 0.20, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+    for enemy in level.enemies:
+        move_tween.interpolate_property(enemy.sprite_node, "position", enemy.sprite_node.position, enemy.tile_coord * TILE_SIZE, 0.20, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+
+    move_tween.start()
+
     yield(get_tree(), "idle_frame")
 
     var space_state = get_world_2d().direct_space_state
