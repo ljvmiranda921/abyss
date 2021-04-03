@@ -18,6 +18,7 @@ var enemy_pathfinding
 # Node references
 onready var tile_map = $TileMap
 onready var visibility_map = $VisibilityMap
+onready var poof_effect = $PoofEffect
 
 # Tilemap reference
 enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
@@ -52,6 +53,12 @@ func get_start_coord() -> Vector2:
     var x = start_room.position.x + 1 + randi() % int(start_room.size.x - 3)
     var y = start_room.position.y + 1 + randi() % int(start_room.size.y - 3)
     return Vector2(x, y)
+
+func play_effect(effect, x, y):
+    if effect == "poof":
+        poof_effect.position = Vector2(x, y)
+        poof_effect.play("default")
+        poof_effect.set_frame(0)
 
 
 func set_tile(x, y, type):
