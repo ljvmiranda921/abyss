@@ -1,8 +1,9 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://art/ForestTileset-sheet.png" type="Texture" id=1]
 [ext_resource path="res://art/Visibility.png" type="Texture" id=2]
 [ext_resource path="res://Level/Forest.gd" type="Script" id=3]
+[ext_resource path="res://art/EffectPoof.png" type="Texture" id=4]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
@@ -340,6 +341,34 @@ points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 0/shapes = [  ]
 0/z_index = 0
 
+[sub_resource type="AtlasTexture" id=33]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=34]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=35]
+atlas = ExtResource( 4 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=36]
+atlas = ExtResource( 4 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=37]
+atlas = ExtResource( 4 )
+region = Rect2( 128, 0, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=32]
+animations = [ {
+"frames": [ null, SubResource( 33 ), SubResource( 34 ), SubResource( 35 ), SubResource( 36 ), SubResource( 37 ), null ],
+"loop": false,
+"name": "default",
+"speed": 12.0
+} ]
+
 [node name="Level" type="Node2D"]
 script = ExtResource( 3 )
 
@@ -352,3 +381,7 @@ format = 1
 tile_set = SubResource( 23 )
 cell_size = Vector2( 32, 32 )
 format = 1
+
+[node name="PoofEffect" type="AnimatedSprite" parent="."]
+frames = SubResource( 32 )
+centered = false

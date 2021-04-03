@@ -27,7 +27,7 @@ func move(dest_x, dest_y):
 
 func attack(enemy, anim_offset):
     # Update animation
-    _animate_attack(sprite_anim, enemy, anim_offset)
+    _animate_attack(sprite_anim, anim_offset)
 
     # Apply actual damage to enemy
     enemy.take_damage(damage)
@@ -40,13 +40,20 @@ func pickup(item):
     item.remove()
 
 
-func _animate_attack(player, enemy, offset):
+func destroy(x, y, drop_chance, anim_offset, game):
+    _animate_attack(sprite_anim, anim_offset, false)
+    var probs = rand_range(0, 1)
+    if probs > (1 - drop_chance):
+        ItemFactory.drop_item(game, x, y)
+
+func _animate_attack(player, offset, slash_effect = true):
     player.play("attack")
     player.set_offset(offset)
     self.z_index = 100
-    $SlashEffect.play("default")
-    $SlashEffect.set_frame(0)
-    $SlashEffect.set_offset(offset * 1.824)
+    if slash_effect:
+        $SlashEffect.play("default")
+        $SlashEffect.set_frame(0)
+        $SlashEffect.set_offset(offset * 1.824)
     $Camera2D.small_shake()
 
 
