@@ -12,6 +12,7 @@ var map = []
 var rooms = []
 var enemies = []
 var items = []
+var map_objects = []
 var enemy_pathfinding
 
 # Node references
@@ -19,7 +20,7 @@ onready var tile_map = $TileMap
 onready var visibility_map = $VisibilityMap
 
 # Tilemap reference
-enum Tile { OuterWall, InnerWall, Ground, Door }
+enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
 
 func _ready():
     pass
@@ -33,6 +34,7 @@ func init(size, room_count, min_room_dim, max_room_dim):
 
     randomize()
     build_level()
+    place_end_ladder()
 
 
 func get_tile_type(x, y) -> int:
@@ -59,6 +61,13 @@ func set_tile(x, y, type):
     if type == Tile.Ground:
         clear_path(Vector2(x, y))
 
+
+func place_end_ladder():
+    var end_room = rooms.back()
+    var ladder_x = end_room.position.x + 1 + randi() % int(end_room.size.x - 2)
+    var ladder_y = end_room.position.y + 1 + randi() % int(end_room.size.y - 2)
+    set_tile(ladder_x, ladder_y, Tile.Ladder)
+    
 
 func update_visibility_map(player_tile: Vector2, tile_size: int, space_state):
 
@@ -97,6 +106,9 @@ func add_enemies(game, level_num, num_enemies):
         var blocked = false
         for enemy in enemies:
             if enemy.tile_coord.x == x && enemy.tile_coord.y == y:
+                blocked = true
+                break
+            if map[x][y] != Tile.Ground:
                 blocked = true
                 break
 
@@ -196,9 +208,20 @@ func _add_rooms(free_regions):
         set_tile(start_x + size_x - 1, y, Tile.InnerWall)
 
         for x in range(start_x + 1, start_x + size_x - 1):
-            set_tile(x, y, Tile.Ground)
+            var probs = rand_range(0, 1)
+            if probs > (1-0.10) && _no_doors_around(x, y):
+                set_tile(x, y, Tile.MapObject)
+            else:
+                set_tile(x, y, Tile.Ground)
 
     _cut_regions(free_regions, room)
+
+
+func _no_doors_around(x, y):
+    if map[x + 1][y] != Tile.Door && map[x - 1][y] != Tile.Door && map[x][y+1] != Tile.Door && map[x][y-1] != Tile.Door:
+        return true
+    else:
+        return false
 
 
 func _cut_regions(free_regions, region_to_remove):

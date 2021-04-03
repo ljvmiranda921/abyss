@@ -11,9 +11,10 @@ const LEVEL_SIZES = [
 # Game state containers
 var starting_level: int = 0
 var starting_hp: int = 100
+var object_item_drop_chance: float = 0.08
 
 # Tilemap reference
-enum Tile { OuterWall, InnerWall, Ground, Door }
+enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
 
 # Scene instances
 onready var level = preload("res://Level/Forest.tscn").instance()
@@ -95,6 +96,11 @@ func handle_directional_input(dx, dy):
                     level.items.erase(item)
         Tile.Door:
             level.set_tile(dest_x, dest_y, Tile.Ground)
+        Tile.MapObject:
+            level.set_tile(dest_x, dest_y, Tile.Ground)
+            var probs = rand_range(0, 1)
+            if probs > (1 - object_item_drop_chance):
+                ItemFactory.drop_item(self, dest_x, dest_y)
 
     # Enemy turn
     for enemy in level.enemies:
