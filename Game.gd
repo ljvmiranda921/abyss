@@ -98,7 +98,6 @@ func handle_directional_input(dx, dy):
             level.set_tile(dest_x, dest_y, Tile.Ground)
         Tile.MapObject:
             level.set_tile(dest_x, dest_y, Tile.Ground)
-            print_debug(player.position)
             level.play_effect("poof", dest_x * TILE_SIZE, dest_y * TILE_SIZE)
             var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
             player.destroy(dest_x, dest_y, object_item_drop_chance, pos_offset, self)
