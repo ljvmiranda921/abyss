@@ -91,7 +91,7 @@ func handle_directional_input(dx, dy):
             if !blocked:
                 player.move(dest_x, dest_y)
                 var item = scan_for_items(dest_x, dest_y)
-                if item:
+                if item && player.hp != starting_hp:
                     player.pickup(item)
                     level.items.erase(item)
         Tile.Door:
