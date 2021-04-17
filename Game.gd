@@ -85,7 +85,7 @@ func handle_directional_input(dx, dy):
             for enemy in level.enemies:
                 if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
                     var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
-                    combat_player_turn(player, enemy, pos_offset)
+                    combat_player_turn(player, enemy, pos_offset, level)
                     blocked = true
                     break
             if !blocked:
@@ -115,8 +115,8 @@ func scan_for_items(x, y):
         if item.tile_coord == Vector2(x, y):
             return item
 
-func combat_player_turn(player, enemy, anim_offset):
-    player.attack(enemy, anim_offset)
+func combat_player_turn(player, enemy, anim_offset, level):
+    player.attack(enemy, anim_offset, level)
     if enemy.dead:
         enemy.remove()
         level.enemies.erase(enemy)
