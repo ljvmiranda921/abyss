@@ -25,12 +25,12 @@ func move(dest_x, dest_y):
     tile_coord = Vector2(dest_x, dest_y)
 
 
-func attack(enemy, anim_offset):
+func attack(enemy, anim_offset, level):
     # Update animation
     _animate_attack(sprite_anim, anim_offset)
 
     # Apply actual damage to enemy
-    enemy.take_damage(damage)
+    enemy.take_damage(damage, level, tile_coord)
 
 
 func pickup(item):
