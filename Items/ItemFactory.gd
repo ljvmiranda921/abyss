@@ -64,10 +64,10 @@ class Item extends Reference:
         call(effect, player)
 
 
-    func heal_hp(player):
+    func heal_hp(player, heal_value = 15):
         player.get_node("HealEffect").play("default")
         player.get_node("HealEffect").set_frame(0)
-        var new_hp = player.hp + 30
+        var new_hp = player.hp + heal_value
         if new_hp >= 100:
             player.hp = 100
         else:
