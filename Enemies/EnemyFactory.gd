@@ -4,7 +4,7 @@ const MonkeyScene = preload("res://Enemies/ForestEnemies/EnemyMonkey.tscn")
 const PlanteraScene = preload("res://Enemies/ForestEnemies/EnemyPlantera.tscn")
 const BeeScene = preload("res://Enemies/ForestEnemies/EnemyBee.tscn")
 
-# const SkeletonSwordsmanScene = preload("res://Enemies/CavernEnemies/EnemySkSword.tscn")
+const SkeletonSwordsmanScene = preload("res://Enemies/CavernEnemies/EnemySkSword.tscn")
 const SkeletonRogueScene = preload("res://Enemies/CavernEnemies/EnemySkRogue.tscn")
 const SkeletonDefenderScene = preload("res://Enemies/CavernEnemies/EnemySkDefender.tscn")
 
@@ -57,17 +57,30 @@ const FOREST_ENEMIES = [
 
 const CAVERN_ENEMIES = [
     {
+        "name": "SkeletonSword",
+        "scene": SkeletonSwordsmanScene, 
+        "spawn_probs": 0.2,
+        "acc_weight": 0.0, 
+        "line_of_sight": 4,
+        "drop_chance": 0.30,
+        "defend_turns": 0,
+        "can_evade": false,
+        "offset_divider": 4,
+        "hp": 90,
+        "damage": 15
+    },
+    {
         "name": "SkeletonRogue",
         "scene": SkeletonRogueScene, 
         "spawn_probs": 0.5,
         "acc_weight": 0.0, 
         "line_of_sight": 6,
-        "drop_chance": 0.30,
+        "drop_chance": 0.60,
         "defend_turns": 8,
         "can_evade": true,
         "offset_divider": 2,
         "hp": 120,
-        "damage": 15
+        "damage": 10
     },
     {
         "name": "SkeletonDefender",
@@ -79,8 +92,8 @@ const CAVERN_ENEMIES = [
         "defend_turns": 5,
         "can_evade": false,
         "offset_divider": 4,
-        "hp": 120,
-        "damage": 15
+        "hp": 200,
+        "damage": 8
     },
 ]
 const UDRWLD_ENEMIES = {}
