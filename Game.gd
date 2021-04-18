@@ -153,5 +153,6 @@ func update_visuals():
 
 func recv_restart_game():
     level.remove()
+    current_level = starting_level
     start_game(starting_level)
     hud.lose.visible = false
