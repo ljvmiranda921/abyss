@@ -2,11 +2,6 @@ extends Node2D
 
 # Constants
 const TILE_SIZE = 32
-const LEVEL_SIZES = [
-    Vector2(30, 30), 
-    Vector2(35, 35),
-    Vector2(40, 40)
-]
 
 # Game state containers
 var starting_level: int = 0
@@ -17,18 +12,13 @@ var object_item_drop_chance: float = 0.08
 enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
 
 # Scene instances
-onready var level = preload("res://Level/Forest.tscn").instance()
+# onready var level = preload("res://Level/Forest.tscn").instance()
+var level
 onready var player = preload("res://Player/Player.tscn").instance()
 onready var hud = preload("res://HUD.tscn").instance()
 
 func _ready():
     OS.set_window_size(Vector2(1280, 720))
-
-    # Add the scenes so that they appear in
-    # the Game tree
-    add_child(hud)
-    add_child(level)
-    add_child(player)
 
     # Start game at Level 0
     start_game(starting_level)
@@ -40,8 +30,12 @@ func _ready():
 
 
 func start_game(lvl):
-
-    level.init(LEVEL_SIZES[lvl], 5, 5, 8)
+    # Add the scenes so that they appear in
+    # the Game tree
+    add_child(hud)
+    # -- add level scene
+    level = LevelFactory.create_level(self, lvl)
+    add_child(player)
     player.init(starting_hp)
 
     hud.set_level(lvl)
@@ -150,5 +144,6 @@ func update_visuals():
 
 
 func recv_restart_game():
+    level.remove()
     start_game(starting_level)
     hud.lose.visible = false

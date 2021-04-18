@@ -341,29 +341,29 @@ points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 0/shapes = [  ]
 0/z_index = 0
 
-[sub_resource type="AtlasTexture" id=33]
+[sub_resource type="AtlasTexture" id=24]
 atlas = ExtResource( 4 )
 region = Rect2( 0, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=34]
+[sub_resource type="AtlasTexture" id=25]
 atlas = ExtResource( 4 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=35]
+[sub_resource type="AtlasTexture" id=26]
 atlas = ExtResource( 4 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=36]
+[sub_resource type="AtlasTexture" id=27]
 atlas = ExtResource( 4 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=37]
+[sub_resource type="AtlasTexture" id=28]
 atlas = ExtResource( 4 )
 region = Rect2( 128, 0, 32, 32 )
 
-[sub_resource type="SpriteFrames" id=32]
+[sub_resource type="SpriteFrames" id=29]
 animations = [ {
-"frames": [ null, SubResource( 33 ), SubResource( 34 ), SubResource( 35 ), SubResource( 36 ), SubResource( 37 ), null ],
+"frames": [ null, SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ), null ],
 "loop": false,
 "name": "default",
 "speed": 12.0
@@ -383,5 +383,5 @@ cell_size = Vector2( 32, 32 )
 format = 1
 
 [node name="PoofEffect" type="AnimatedSprite" parent="."]
-frames = SubResource( 32 )
+frames = SubResource( 29 )
 centered = false
