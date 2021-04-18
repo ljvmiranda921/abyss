@@ -2,6 +2,7 @@ extends Node2D
 
 # Constants
 const TILE_SIZE = 32
+const NUM_ENEMIES = [10, 30]
 
 # Game state containers
 var starting_level: int = 0
@@ -47,7 +48,7 @@ func start_game(lvl):
     call_deferred("update_visuals")
 
     # Add enemies and place in level
-    level.add_enemies(self, lvl, 10)
+    level.add_enemies(self, lvl, NUM_ENEMIES[lvl])
 
 
 func _input(event):
