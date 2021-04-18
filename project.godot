@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "ItemFactory",
 "language": "GDScript",
 "path": "res://Items/ItemFactory.gd"
+}, {
+"base": "Reference",
+"class": "LevelFactory",
+"language": "GDScript",
+"path": "res://Level/LevelFactory.gd"
 } ]
 _global_script_class_icons={
 "EnemyFactory": "",
 "GitAPI": "",
-"ItemFactory": ""
+"ItemFactory": "",
+"LevelFactory": ""
 }
 
 [application]
