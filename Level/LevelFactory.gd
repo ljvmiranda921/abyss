@@ -5,6 +5,7 @@ enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
 
 
 const ForestScene = preload("res://Level/Forest.tscn")
+const CavernScene = preload("res://Level/Cavern.tscn")
 
 const LEVEL_CONFIG = [
     {
@@ -15,12 +16,14 @@ const LEVEL_CONFIG = [
         "min_room_dim": 5, 
         "max_room_dim": 8
     },
-    # {
-    #     "name": "Cavern",
-    #     "room_count": 10,
-    #     "min_room_dim": 8, 
-    #     "max_room_dim": 13
-    # }
+    {
+        "name": "Cavern",
+        "size": Vector2(50, 50),
+        "scene": CavernScene,
+        "room_count": 45,
+        "min_room_dim": 6, 
+        "max_room_dim": 8 
+    }
 ]
 
 
