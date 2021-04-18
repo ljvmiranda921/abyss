@@ -85,7 +85,7 @@ const CAVERN_ENEMIES = [
     {
         "name": "SkeletonDefender",
         "scene": SkeletonDefenderScene,
-        "spawn_probs": 1000.3,
+        "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 4,
         "drop_chance": 0.70,

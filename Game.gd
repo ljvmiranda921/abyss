@@ -8,6 +8,7 @@ const NUM_ENEMIES = [10, 30]
 var starting_level: int = 0
 var starting_hp: int = 100
 var object_item_drop_chance: float = 0.08
+var current_level = 0
 
 # Tilemap reference
 enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
@@ -22,6 +23,7 @@ func _ready():
     OS.set_window_size(Vector2(1280, 720))
 
     # Start game at Level 0
+    current_level = starting_level
     start_game(starting_level)
 
     # Connect to signals emitted by other
@@ -96,6 +98,11 @@ func handle_directional_input(dx, dy):
             level.play_effect("poof", dest_x * TILE_SIZE, dest_y * TILE_SIZE)
             var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
             player.destroy(dest_x, dest_y, object_item_drop_chance, pos_offset, self)
+        Tile.Ladder:
+            print_debug("yay!")
+            level.remove()
+            current_level += 1
+            start_game(current_level)
 
 
     # Enemy turn
