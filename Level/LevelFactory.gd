@@ -1,7 +1,7 @@
 class_name LevelFactory
 
 # Tilemap reference
-enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
+enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder, TrapOff, TrapOn}
 
 
 const ForestScene = preload("res://Level/Forest.tscn")
@@ -14,7 +14,9 @@ const LEVEL_CONFIG = [
         "scene": ForestScene,
         "room_count": 8,
         "min_room_dim": 5, 
-        "max_room_dim": 8
+        "max_room_dim": 8,
+        "trap_countdown": 0,
+        "trap_damage": 0
     },
     {
         "name": "Cavern",
@@ -22,7 +24,9 @@ const LEVEL_CONFIG = [
         "scene": CavernScene,
         "room_count": 15,
         "min_room_dim": 6, 
-        "max_room_dim": 8 
+        "max_room_dim": 8, 
+        "trap_countdown": 3,
+        "trap_damage": 5
     }
 ]
 
@@ -48,6 +52,9 @@ class Level extends Reference:
     var items = []
     var map_objects = []
     var enemy_pathfinding
+    var trap_countdown
+    var trap_damage
+    var trap_on = false
 
     func _init(scene, game, config):
         level_node = scene.instance()
@@ -55,6 +62,8 @@ class Level extends Reference:
         room_count = config.room_count
         min_room_dim = config.min_room_dim
         max_room_dim = config.max_room_dim
+        trap_countdown = config.trap_countdown
+        trap_damage = config.trap_damage
 
         game.add_child(level_node)
 
@@ -64,7 +73,6 @@ class Level extends Reference:
 
     func remove():
         level_node.queue_free()
-
 
     func get_tile_type(x, y) -> int:
         var tile_type: int
@@ -95,6 +103,27 @@ class Level extends Reference:
 
         if type == Tile.Ground:
             clear_path(Vector2(x, y))
+        if type == Tile.TrapOn:
+            clear_path(Vector2(x, y))
+        if type == Tile.TrapOff:
+            clear_path(Vector2(x, y))
+
+
+    func activate_traps():
+        for x in range(level_size.x):
+            for y in range(level_size.y):
+                var tile_type = get_tile_type(x, y)
+                if tile_type == Tile.TrapOff:
+                    set_tile(x, y, Tile.TrapOn)
+                    trap_on = true
+
+    func deactivate_traps():
+        for x in range(level_size.x):
+            for y in range(level_size.y):
+                var tile_type = get_tile_type(x, y)
+                if tile_type == Tile.TrapOn:
+                    set_tile(x, y, Tile.TrapOff)
+                    trap_on = false
 
 
     func place_end_ladder():
@@ -246,6 +275,8 @@ class Level extends Reference:
                 var probs = rand_range(0, 1)
                 if probs > (1-0.10) && _no_doors_around(x, y):
                     set_tile(x, y, Tile.MapObject)
+                elif probs > (1-0.2) && trap_countdown > 0:
+                    set_tile(x, y, Tile.TrapOff)
                 else:
                     set_tile(x, y, Tile.Ground)
 
