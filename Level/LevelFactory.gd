@@ -12,7 +12,7 @@ const LEVEL_CONFIG = [
         "name": "Forest",
         "size": Vector2(30, 30),
         "scene": ForestScene,
-        "room_count": 5,
+        "room_count": 8,
         "min_room_dim": 5, 
         "max_room_dim": 8
     },
@@ -20,7 +20,7 @@ const LEVEL_CONFIG = [
         "name": "Cavern",
         "size": Vector2(50, 50),
         "scene": CavernScene,
-        "room_count": 45,
+        "room_count": 15,
         "min_room_dim": 6, 
         "max_room_dim": 8 
     }

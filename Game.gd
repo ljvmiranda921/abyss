@@ -2,7 +2,7 @@ extends Node2D
 
 # Constants
 const TILE_SIZE = 32
-const NUM_ENEMIES = [10, 30]
+const NUM_ENEMIES = [15, 45]
 
 # Game state containers
 var starting_level: int = 0
