@@ -8,10 +8,11 @@ const NUM_ENEMIES = [15, 45]
 var starting_level: int = 0
 var starting_hp: int = 100
 var object_item_drop_chance: float = 0.08
+var trap_countdown
 var current_level = 0
 
 # Tilemap reference
-enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
+enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder, TrapOff, TrapOn}
 
 # Scene instances
 # onready var level = preload("res://Level/Forest.tscn").instance()
@@ -38,6 +39,7 @@ func start_game(lvl):
     add_child(hud)
     # -- add level scene
     level = LevelFactory.create_level(self, lvl)
+    trap_countdown = level.trap_countdown
     add_child(player)
     player.init(starting_hp)
 
@@ -70,9 +72,19 @@ func _input(event):
     elif event.is_action_pressed("Down"):
         handle_directional_input(0, 1)
 
+    check_for_traps(player)
+
+
+func check_for_traps(player):
+    var curr_x = player.tile_coord.x
+    var curr_y = player.tile_coord.y
+    if level.get_tile_type(curr_x, curr_y) == Tile.TrapOn:
+        player.take_damage(level.trap_damage)
+
 
 func handle_directional_input(dx, dy):
     # Player turn 
+    level.deactivate_traps()
     var dest_x = player.tile_coord.x + dx
     var dest_y = player.tile_coord.y + dy
     var tile_type = level.get_tile_type(dest_x, dest_y)
@@ -103,11 +115,46 @@ func handle_directional_input(dx, dy):
             level.remove()
             current_level += 1
             start_game(current_level)
+        Tile.TrapOff:
+            var blocked = false
+            for enemy in level.enemies:
+                if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
+                    var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
+                    combat_player_turn(player, enemy, pos_offset, level)
+                    blocked = true
+                    break
+            if !blocked:
+                player.move(dest_x, dest_y)
+                var item = scan_for_items(dest_x, dest_y)
+                if item && player.hp != starting_hp:
+                    player.pickup(item)
+                    level.items.erase(item)
+        Tile.TrapOn:
+            player.take_damage(level.trap_damage)
+            var blocked = false
+            for enemy in level.enemies:
+                if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
+                    var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
+                    combat_player_turn(player, enemy, pos_offset, level)
+                    blocked = true
+                    break
+            if !blocked:
+                player.move(dest_x, dest_y)
+                var item = scan_for_items(dest_x, dest_y)
+                if item && player.hp != starting_hp:
+                    player.pickup(item)
+                    level.items.erase(item)
 
 
     # Enemy turn
     for enemy in level.enemies:
         enemy.act(level, player)
+
+    # Update trap countdown
+    trap_countdown -= 1
+    if trap_countdown == 0:
+        level.activate_traps()
+        trap_countdown = level.trap_countdown  # reset countdown
 
     call_deferred("update_visuals")
 
