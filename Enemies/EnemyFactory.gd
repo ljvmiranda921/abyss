@@ -8,6 +8,8 @@ const SkeletonSwordsmanScene = preload("res://Enemies/CavernEnemies/EnemySkSword
 const SkeletonRogueScene = preload("res://Enemies/CavernEnemies/EnemySkRogue.tscn")
 const SkeletonDefenderScene = preload("res://Enemies/CavernEnemies/EnemySkDefender.tscn")
 
+const NecromancerScene = preload("res://Enemies/UnderworldEnemies/EnemyNecromancer.tscn")
+
 const TILE_SIZE = 32
 
 # Tilemap reference
@@ -80,7 +82,7 @@ const CAVERN_ENEMIES = [
         "can_evade": true,
         "offset_divider": 2,
         "hp": 120,
-        "damage": 10
+        "damage": 12
     },
     {
         "name": "SkeletonDefender",
@@ -93,10 +95,25 @@ const CAVERN_ENEMIES = [
         "can_evade": false,
         "offset_divider": 4,
         "hp": 200,
-        "damage": 8
+        "damage": 10
     },
 ]
-const UDRWLD_ENEMIES = {}
+
+const UDRWLD_ENEMIES = [
+    {
+        "name": "Necromancer",
+        "scene": NecromancerScene,
+        "spawn_probs": 0.3,
+        "acc_weight": 0.0, 
+        "line_of_sight": 4,
+        "drop_chance": 0.70,
+        "defend_turns": 0,
+        "can_evade": false,
+        "offset_divider": 6,
+        "hp": 180,
+        "damage": 5
+    },
+]
 
 # Only for general mobs
 const ENEMY_DEFINITIONS = [FOREST_ENEMIES, CAVERN_ENEMIES, UDRWLD_ENEMIES]

@@ -9,26 +9,26 @@ const CavernScene = preload("res://Level/Cavern.tscn")
 const UnderworldScene = preload("res://Level/Underworld.tscn")
 
 const LEVEL_CONFIG = [
-    # {
-    #     "name": "Forest",
-    #     "size": Vector2(30, 30),
-    #     "scene": ForestScene,
-    #     "room_count": 8,
-    #     "min_room_dim": 5, 
-    #     "max_room_dim": 8,
-    #     "trap_countdown": 0,
-    #     "trap_damage": 0
-    # },
-    # {
-    #     "name": "Cavern",
-    #     "size": Vector2(50, 50),
-    #     "scene": CavernScene,
-    #     "room_count": 15,
-    #     "min_room_dim": 6, 
-    #     "max_room_dim": 8, 
-    #     "trap_countdown": 3,
-    #     "trap_damage": 5
-    # },
+    {
+        "name": "Forest",
+        "size": Vector2(30, 30),
+        "scene": ForestScene,
+        "room_count": 8,
+        "min_room_dim": 5, 
+        "max_room_dim": 8,
+        "trap_countdown": 0,
+        "trap_damage": 0
+    },
+    {
+        "name": "Cavern",
+        "size": Vector2(50, 50),
+        "scene": CavernScene,
+        "room_count": 15,
+        "min_room_dim": 7, 
+        "max_room_dim": 8, 
+        "trap_countdown": 3,
+        "trap_damage": 5
+    },
     {
         "name": "Underworld",
         "size": Vector2(20, 50),
