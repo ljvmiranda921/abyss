@@ -134,7 +134,7 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
-"loop": false,
+"loop": true,
 "name": "defend",
 "speed": 5.0
 } ]
@@ -170,7 +170,7 @@ animations = [ {
 [node name="AnimatedSprite" type="AnimatedSprite"]
 visible = false
 frames = SubResource( 29 )
-frame = 2
+frame = 1
 speed_scale = 1.6
 playing = true
 centered = false
@@ -182,4 +182,5 @@ frames = SubResource( 35 )
 frame = 6
 centered = false
 offset = Vector2( 10, -30 )
+
 [connection signal="animation_finished" from="." to="." method="_on_AnimatedSprite_animation_finished"]

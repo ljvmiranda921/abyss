@@ -111,7 +111,6 @@ func handle_directional_input(dx, dy):
             var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
             player.destroy(dest_x, dest_y, object_item_drop_chance, pos_offset, self)
         Tile.Ladder:
-            print_debug("yay!")
             level.remove()
             current_level += 1
             start_game(current_level)
