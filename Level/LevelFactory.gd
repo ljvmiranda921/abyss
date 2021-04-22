@@ -85,6 +85,17 @@ class Level extends Reference:
         self.place_end_ladder()
 
     func remove():
+        rooms.clear()
+        map.clear()
+        level_node.tile_map.clear()
+
+        for enemy in enemies:
+            enemy.remove()
+        enemies.clear()
+
+        for item in items:
+            item.remove()
+        items.clear()
         level_node.queue_free()
 
     func get_tile_type(x, y) -> int:
@@ -109,7 +120,6 @@ class Level extends Reference:
             level_node.poof_effect.play("default")
             level_node.poof_effect.set_frame(0)
         if effect == "cast":
-            print_debug("playing cast")
             level_node.cast_effect.position = Vector2(x, y)
             level_node.cast_effect.play("default")
             level_node.cast_effect.set_frame(0)
