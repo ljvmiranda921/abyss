@@ -56,6 +56,7 @@ class Level extends Reference:
     var room_count
     var min_room_dim
     var max_room_dim
+    var game_copy
 
     var map = []
     var rooms = []
@@ -75,6 +76,7 @@ class Level extends Reference:
         max_room_dim = config.max_room_dim
         trap_countdown = config.trap_countdown
         trap_damage = config.trap_damage
+        game_copy = game
 
         game.add_child(level_node)
 
@@ -106,6 +108,11 @@ class Level extends Reference:
             level_node.poof_effect.position = Vector2(x, y)
             level_node.poof_effect.play("default")
             level_node.poof_effect.set_frame(0)
+        if effect == "cast":
+            print_debug("playing cast")
+            level_node.cast_effect.position = Vector2(x, y)
+            level_node.cast_effect.play("default")
+            level_node.cast_effect.set_frame(0)
 
 
     func set_tile(x, y, type):
@@ -170,6 +177,32 @@ class Level extends Reference:
                 var occlusion = space_state.intersect_ray(player_center, enemy_center)
                 if !occlusion:
                     enemy.sprite_node.visible = true
+
+    func summon_familiar(x, y, player_pos, summon_probs):
+        var offsets = [Vector2(0,1), Vector2(1,0), Vector2(0,-1), Vector2(-1,0)]
+        var summoner_position = Vector2(x,y)
+
+        for offset in offsets:
+            var test_position = offset + summoner_position
+            var blocked = false
+            for enemy in enemies:
+                if enemy.tile_coord.x == test_position.x && enemy.tile_coord.y == test_position.y:
+                    blocked = true
+                    break
+                if map[test_position.x][test_position.y] != Tile.Ground:
+                    blocked = true
+                    break
+
+            if player_pos.x == test_position.x && player_pos.y == test_position.y:
+                blocked = true
+                break
+
+            if !blocked:
+                var probs = rand_range(0, 1)
+                if probs > (1 - summon_probs):
+                    play_effect("cast", test_position.x * 32, test_position.y * 32)
+                    var enemy = EnemyFactory.spawn_familiar(game_copy, test_position.x, test_position.y)
+                    enemies.append(enemy)
 
 
     func add_enemies(game, level_num, num_enemies):
