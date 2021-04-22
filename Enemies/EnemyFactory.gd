@@ -74,7 +74,7 @@ const CAVERN_ENEMIES = [
         "can_evade": false,
         "offset_divider": 4,
         "hp": 90,
-        "damage": 15
+        "damage": 18
     },
     {
         "name": "SkeletonRogue",
@@ -88,7 +88,7 @@ const CAVERN_ENEMIES = [
         "can_evade": true,
         "offset_divider": 2,
         "hp": 120,
-        "damage": 12
+        "damage": 15
     },
     {
         "name": "SkeletonDefender",
@@ -102,7 +102,7 @@ const CAVERN_ENEMIES = [
         "can_evade": false,
         "offset_divider": 4,
         "hp": 200,
-        "damage": 10
+        "damage": 12
     },
 ]
 
