@@ -1,51 +1,43 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://Enemies/UnderworldEnemies/EnemyNecromancer.gd" type="Script" id=1]
+[ext_resource path="res://Enemies/UnderworldEnemies/EnemyFamiliar.gd" type="Script" id=1]
 [ext_resource path="res://art/EffectLOS.png" type="Texture" id=2]
-[ext_resource path="res://art/enemies/EnemyNecromancer.png" type="Texture" id=3]
+[ext_resource path="res://art/enemies/EnemyFamiliar.png" type="Texture" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 3 )
+atlas = ExtResource( 4 )
 region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 3 )
+atlas = ExtResource( 4 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=19]
+atlas = ExtResource( 4 )
 region = Rect2( 0, 64, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 4 )
 region = Rect2( 32, 64, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 4 )
 region = Rect2( 64, 64, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 3 )
-region = Rect2( 96, 64, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=7]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 4 )
 region = Rect2( 0, 32, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=8]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 4 )
 region = Rect2( 32, 32, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=9]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 4 )
 region = Rect2( 32, 32, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=10]
-atlas = ExtResource( 3 )
-region = Rect2( 32, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=11]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=25]
+atlas = ExtResource( 4 )
 region = Rect2( 32, 32, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=12]
@@ -55,12 +47,12 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), null ],
+"frames": [ SubResource( 19 ), SubResource( 20 ), SubResource( 21 ), null ],
 "loop": false,
 "name": "death",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ) ],
+"frames": [ SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ) ],
 "loop": false,
 "name": "attack",
 "speed": 5.0
@@ -95,10 +87,10 @@ animations = [ {
 } ]
 
 [node name="AnimatedSprite" type="AnimatedSprite"]
-visible = false
 position = Vector2( 0, -1 )
 frames = SubResource( 12 )
 frame = 1
+speed_scale = 0.75
 playing = true
 centered = false
 script = ExtResource( 1 )
