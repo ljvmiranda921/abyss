@@ -9,6 +9,8 @@ var starting_level: int = 0
 var starting_hp: int = 100
 var object_item_drop_chance: float = 0.08
 var trap_countdown
+var trap_active_time
+var trap_is_active = false
 var current_level = 0
 
 # Tilemap reference
@@ -40,6 +42,7 @@ func start_game(lvl):
     # -- add level scene
     level = LevelFactory.create_level(self, lvl)
     trap_countdown = level.trap_countdown
+    trap_active_time = level.trap_countdown
     add_child(player)
     player.init(starting_hp)
 
@@ -84,7 +87,13 @@ func check_for_traps(player):
 
 func handle_directional_input(dx, dy):
     # Player turn 
-    level.deactivate_traps()
+    if trap_is_active:
+        trap_active_time -= 1
+        if trap_active_time == 0:
+            level.deactivate_traps()
+            trap_is_active = false
+            trap_active_time = level.trap_countdown
+
     var dest_x = player.tile_coord.x + dx
     var dest_y = player.tile_coord.y + dy
     var tile_type = level.get_tile_type(dest_x, dest_y)
@@ -150,10 +159,12 @@ func handle_directional_input(dx, dy):
         enemy.act(level, player)
 
     # Update trap countdown
-    trap_countdown -= 1
-    if trap_countdown == 0:
-        level.activate_traps()
-        trap_countdown = level.trap_countdown  # reset countdown
+    if !trap_is_active:
+        trap_countdown -= 1
+        if trap_countdown == 0:
+            level.activate_traps()
+            trap_is_active = true
+            trap_countdown = level.trap_countdown  # reset countdown
 
     call_deferred("update_visuals")
 
