@@ -9,6 +9,7 @@ const SkeletonRogueScene = preload("res://Enemies/CavernEnemies/EnemySkRogue.tsc
 const SkeletonDefenderScene = preload("res://Enemies/CavernEnemies/EnemySkDefender.tscn")
 
 const NecromancerScene = preload("res://Enemies/UnderworldEnemies/EnemyNecromancer.tscn")
+const FamiliarScene = preload("res://Enemies/UnderworldEnemies/EnemyFamiliar.tscn")
 
 const TILE_SIZE = 32
 
@@ -24,6 +25,7 @@ const FOREST_ENEMIES = [
         "line_of_sight": 3,
         "drop_chance": 0.6,
         "defend_turns": 0,
+        "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
         "hp": 75, 
@@ -37,6 +39,7 @@ const FOREST_ENEMIES = [
         "line_of_sight": 2,
         "drop_chance": 0.70,
         "defend_turns": 0,
+        "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
         "hp": 60,
@@ -50,6 +53,7 @@ const FOREST_ENEMIES = [
         "line_of_sight": 5,
         "drop_chance": 0.3,
         "defend_turns": 0,
+        "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
         "hp": 60,
@@ -66,6 +70,7 @@ const CAVERN_ENEMIES = [
         "line_of_sight": 4,
         "drop_chance": 0.30,
         "defend_turns": 0,
+        "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
         "hp": 90,
@@ -79,6 +84,7 @@ const CAVERN_ENEMIES = [
         "line_of_sight": 6,
         "drop_chance": 0.60,
         "defend_turns": 8,
+        "summon_probs": 0,
         "can_evade": true,
         "offset_divider": 2,
         "hp": 120,
@@ -92,6 +98,7 @@ const CAVERN_ENEMIES = [
         "line_of_sight": 4,
         "drop_chance": 0.70,
         "defend_turns": 5,
+        "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
         "hp": 200,
@@ -108,6 +115,7 @@ const UDRWLD_ENEMIES = [
         "line_of_sight": 4,
         "drop_chance": 0.70,
         "defend_turns": 0,
+        "summon_probs": 0.45,
         "can_evade": false,
         "offset_divider": 6,
         "hp": 180,
@@ -115,8 +123,51 @@ const UDRWLD_ENEMIES = [
     },
 ]
 
+const ENEMY_FAMILIARS = [
+    {
+        "name": "SkeletonSwordFamiliar",
+        "scene": SkeletonSwordsmanScene, 
+        "spawn_probs": 0.3,
+        "acc_weight": 0.0, 
+        "line_of_sight": 4,
+        "drop_chance": 0.30,
+        "defend_turns": 0,
+        "summon_probs": 0,
+        "can_evade": false,
+        "offset_divider": 4,
+        "hp": 50,
+        "damage": 10
+    },
+    {
+        "name": "Familiar",
+        "scene": FamiliarScene, 
+        "spawn_probs": 0.7,
+        "acc_weight": 0.0, 
+        "line_of_sight": 4,
+        "drop_chance": 0.60,
+        "defend_turns": 0,
+        "summon_probs": 0,
+        "can_evade": false,
+        "offset_divider": 4,
+        "hp": 50,
+        "damage": 12
+    }
+]
+
 # Only for general mobs
-const ENEMY_DEFINITIONS = [FOREST_ENEMIES, CAVERN_ENEMIES, UDRWLD_ENEMIES]
+const ENEMY_DEFINITIONS = [
+    FOREST_ENEMIES, 
+    CAVERN_ENEMIES, 
+    UDRWLD_ENEMIES
+]
+
+
+static func spawn_familiar(game, x, y):
+    var mobs = ENEMY_FAMILIARS
+    var total_weight = init_probabilities(mobs)
+    var enemy_def = pick_some_object(mobs, total_weight)
+    var enemy = Enemy.new(game, enemy_def.hp, enemy_def.damage, enemy_def.scene, enemy_def, x, y, 32)
+    return enemy
 
 
 static func spawn_enemy(game, level_num, x, y):
@@ -153,6 +204,8 @@ class Enemy extends Reference:
     var attack_dmg
     var drop_chance
     var game_class
+    var can_summon
+    var summon_probs
 
     # Status
     var in_pursuit
@@ -181,6 +234,8 @@ class Enemy extends Reference:
         attack_dmg = damage
         starting_defend = enemy_config.defend_turns
         can_evade = enemy_config.can_evade
+        can_summon = enemy_config.summon_probs > 0
+        summon_probs = enemy_config.summon_probs
         # Setup display
         offset_divider = enemy_config.offset_divider
         
@@ -208,6 +263,15 @@ class Enemy extends Reference:
             # If path exists between enemy and player
             assert(path.size() > 1)
             var move_tile = Vector2(path[1].x, path[1].y)
+
+
+            if can_summon:
+                var probs = rand_range(0, 1)
+                if probs > (1 - summon_probs):
+                    level.summon_familiar(tile_coord.x, tile_coord.y, player.tile_coord, summon_probs)
+                else:
+                    pass
+
             if move_tile == player.tile_coord:
                 if defend:  # 30% chance to attack when defending
                     var probs = rand_range(0, 1)
@@ -215,6 +279,14 @@ class Enemy extends Reference:
                         self._attack(player, TILE_SIZE)
                     else:
                         pass
+                # elif can_summon:
+                #     var probs = rand_range(0, 1)
+                #     print_debug("trying to summon, rolling dice...")
+                #     print_debug(probs)
+                #     if probs > (1 - summon_probs):
+                #         level.summon_familiar(tile_coord.x, tile_coord.y)
+                #     else:
+                #         pass
                 else:
                     self._attack(player, TILE_SIZE)
             else:
@@ -243,6 +315,8 @@ class Enemy extends Reference:
 
         # Send damage to player
         player.take_damage(attack_dmg)
+
+
 
 
     func take_damage(dmg, level, player_pos):

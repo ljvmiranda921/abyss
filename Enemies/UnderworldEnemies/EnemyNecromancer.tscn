@@ -98,7 +98,6 @@ animations = [ {
 visible = false
 position = Vector2( 0, -1 )
 frames = SubResource( 12 )
-frame = 1
 playing = true
 centered = false
 script = ExtResource( 1 )
