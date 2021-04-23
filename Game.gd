@@ -35,15 +35,17 @@ func _ready():
 
 
 
-func start_game(lvl):
+func start_game(lvl, init=true):
     # Add the scenes so that they appear in
     # the Game tree
-    add_child(hud)
-    # -- add level scene
+    if lvl == 0 && init:
+        add_child(hud)
+        add_child(player)
+
+    # Generate level scene
     level = LevelFactory.create_level(self, lvl)
     trap_countdown = level.trap_countdown
     trap_active_time = level.trap_countdown
-    add_child(player)
     player.init(starting_hp)
 
     hud.set_level(lvl)
@@ -211,5 +213,5 @@ func update_visuals():
 func recv_restart_game():
     level.remove()
     current_level = starting_level
-    start_game(starting_level)
+    start_game(starting_level, false)
     hud.lose.visible = false
