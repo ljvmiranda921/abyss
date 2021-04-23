@@ -114,6 +114,7 @@ class Level extends Reference:
         var y = start_room.position.y + 1 + randi() % int(start_room.size.y - 3)
         return Vector2(x, y)
 
+
     func play_effect(effect, x, y):
         if effect == "poof":
             level_node.poof_effect.position = Vector2(x, y)
@@ -154,17 +155,45 @@ class Level extends Reference:
                     trap_on = false
 
 
+    func _get_farthest_room_from_start():
+        # Get start room
+        var start_room = rooms.front()
+        var start_room_pos = Vector2(start_room.position.x, start_room.position.y)
+
+        # Get position of all other rooms
+        var room_positions = []
+        for room in rooms:
+            var room_position = Vector2(room.position.x, room.position.y)
+            room_positions.append(room_position)
+
+        # Get distances of start room for all other rooms
+        var room_distances = []
+        for position in room_positions:
+            var dist = start_room_pos.distance_to(position)
+            room_distances.append(dist)
+
+        # Get the room with max distance (probably the farthest)
+        var max_dist = room_distances.max()
+        var farthest_room_idx = room_distances.find(max_dist)
+        return rooms[farthest_room_idx]
+
+
     func place_end_ladder():
-        var end_room = rooms.back()
+        var end_room
+        var probs = rand_range(0, 1)
+        if probs > 0.5:
+            end_room = rooms.back()
+        else:
+            end_room = _get_farthest_room_from_start()
+
+        # Add ladder to room
         var ladder_x = end_room.position.x + 1 + randi() % int(end_room.size.x - 2)
         var ladder_y = end_room.position.y + 1 + randi() % int(end_room.size.y - 2)
         set_tile(ladder_x, ladder_y, Tile.Ladder)
         
 
     func update_visibility_map(player_tile: Vector2, tile_size: int, space_state):
-
         var player_center = _tile_to_pixel_center(player_tile.x, player_tile.y, tile_size)
-
         for x in range(level_size.x):
             for y in range(level_size.y):
                 if level_node.visibility_map.get_cell(x, y) == 0:
