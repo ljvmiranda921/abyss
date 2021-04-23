@@ -122,9 +122,17 @@ func handle_directional_input(dx, dy):
             var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
             player.destroy(dest_x, dest_y, object_item_drop_chance, pos_offset, self)
         Tile.Ladder:
-            level.remove()
-            current_level += 1
-            start_game(current_level)
+            var blocked = false
+            for enemy in level.enemies:
+                if enemy.tile_coord.x == dest_x && enemy.tile_coord.y == dest_y:
+                    var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
+                    combat_player_turn(player, enemy, pos_offset, level)
+                    blocked = true
+                    break
+            if !blocked:
+                level.remove()
+                current_level += 1
+                start_game(current_level)
         Tile.TrapOff:
             var blocked = false
             for enemy in level.enemies:
