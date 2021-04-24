@@ -30,10 +30,10 @@ __meta__ = {
 }
 
 [node name="Level" type="RichTextLabel" parent="."]
-margin_left = 50.0385
-margin_top = 60.7501
-margin_right = 117.13
-margin_bottom = 84.7501
+margin_left = 43.7318
+margin_top = 64.1137
+margin_right = 110.823
+margin_bottom = 88.1137
 custom_fonts/normal_font = ExtResource( 2 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 __meta__ = {
@@ -41,10 +41,10 @@ __meta__ = {
 }
 
 [node name="HP" type="RichTextLabel" parent="."]
-margin_left = 49.7476
-margin_top = 90.1259
-margin_right = 133.748
-margin_bottom = 119.126
+margin_left = 43.0
+margin_top = 90.0
+margin_right = 136.0
+margin_bottom = 119.0
 custom_fonts/normal_font = ExtResource( 2 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 __meta__ = {
@@ -52,15 +52,15 @@ __meta__ = {
 }
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 59.7367, 130.125 )
+position = Vector2( 54.8368, 127.452 )
 scale = Vector2( 1.45432, 1.45432 )
 texture = ExtResource( 5 )
 
 [node name="Damage" type="RichTextLabel" parent="."]
-margin_left = 78.1951
-margin_top = 120.42
-margin_right = 129.195
-margin_bottom = 149.42
+margin_left = 72.627
+margin_top = 116.856
+margin_right = 123.627
+margin_bottom = 145.856
 custom_fonts/normal_font = ExtResource( 2 )
 custom_colors/default_color = Color( 0.929412, 0.929412, 0.929412, 1 )
 __meta__ = {
