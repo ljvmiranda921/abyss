@@ -9,7 +9,9 @@
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 3 )
 
-[node name="PlayerInfoBoxGrad" type="ColorRect" parent="."]
+[node name="InfoBox" type="Node" parent="."]
+
+[node name="PlayerInfoBoxGrad" type="ColorRect" parent="InfoBox"]
 margin_left = 23.0
 margin_top = 22.0
 margin_right = 149.0
@@ -19,7 +21,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayerInfoBox" type="TextureRect" parent="."]
+[node name="PlayerInfoBox" type="TextureRect" parent="InfoBox"]
 margin_left = 22.1058
 margin_top = 19.1576
 margin_right = 150.106
@@ -29,7 +31,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Level" type="RichTextLabel" parent="."]
+[node name="Level" type="RichTextLabel" parent="InfoBox"]
 margin_left = 43.7318
 margin_top = 64.1137
 margin_right = 110.823
@@ -40,7 +42,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HP" type="RichTextLabel" parent="."]
+[node name="HP" type="RichTextLabel" parent="InfoBox"]
 margin_left = 43.0
 margin_top = 90.0
 margin_right = 136.0
@@ -51,12 +53,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DamageLogo" type="Sprite" parent="."]
+[node name="DamageLogo" type="Sprite" parent="InfoBox"]
 position = Vector2( 54.8368, 127.452 )
 scale = Vector2( 1.45432, 1.45432 )
 texture = ExtResource( 5 )
 
-[node name="Damage" type="RichTextLabel" parent="."]
+[node name="Damage" type="RichTextLabel" parent="InfoBox"]
 margin_left = 72.627
 margin_top = 116.856
 margin_right = 123.627
@@ -67,7 +69,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LoseScreen" type="ColorRect" parent="."]
+[node name="Screens" type="Node" parent="."]
+
+[node name="LoseScreen" type="ColorRect" parent="Screens"]
 visible = false
 margin_left = -5.0
 margin_top = -2.0
@@ -78,7 +82,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="LoseScreen"]
+[node name="Button" type="Button" parent="Screens/LoseScreen"]
 margin_left = 270.854
 margin_top = 241.499
 margin_right = 382.854
@@ -89,7 +93,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="LoseScreen"]
+[node name="Label" type="Label" parent="Screens/LoseScreen"]
 margin_left = 98.5052
 margin_top = 88.4949
 margin_right = 548.505
@@ -105,4 +109,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="LoseScreen/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Screens/LoseScreen/Button" to="." method="_on_Button_pressed"]
