@@ -66,6 +66,8 @@ func _input(event):
     if !event.is_pressed():
         return
 
+    # hud.play_transition()
+
     if event.is_action_pressed("Left"):
         handle_directional_input(-1, 0)
         player.get_node("AnimatedSprite").set_flip_h(true)
@@ -139,12 +141,16 @@ func handle_directional_input(dx, dy):
                     blocked = true
                     break
             if !blocked:
+                hud.transition_player.play("Fade")
+                yield(hud.transition_player, "animation_finished")
                 level.remove()
                 current_level += 1
                 var new_hp = player.hp + 10
                 if new_hp > player.total_hp:
                     new_hp = player.total_hp
+
                 start_game(current_level, false, new_hp, player.total_hp, player.damage)
+                hud.transition_player.play_backwards("Fade")
         Tile.TrapOff:
             var blocked = false
             for enemy in level.enemies:
