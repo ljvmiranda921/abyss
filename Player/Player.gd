@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 # Variables set by init
 var hp: int = 100
+var total_hp: int = 100
 var damage: int = 30
 var dead: bool = false
 
@@ -13,8 +14,9 @@ onready var sprite_anim = $AnimatedSprite
 func _ready():
     pass
 
-func init(hp):
-    self.hp = hp
+func init(current_hp, total_hp):
+    self.hp = current_hp
+    self.total_hp = total_hp
     self.damage = damage
     self.dead = false
 
