@@ -7,7 +7,9 @@ const NUM_ENEMIES = [15, 30, 8]
 # Game state containers
 var starting_level: int = 0
 var starting_hp: int = 100
-var object_item_drop_chance: float = 0.08
+var starting_dmg: int = 30
+
+var object_item_drop_chance: float = 0.2
 var trap_countdown
 var trap_active_time
 var trap_is_active = false
@@ -35,7 +37,7 @@ func _ready():
 
 
 
-func start_game(lvl, init=true, current_hp=starting_hp, total_hp=starting_hp):
+func start_game(lvl, init=true, current_hp=starting_hp, total_hp=starting_hp, current_dmg=starting_dmg):
     # Add the scenes so that they appear in
     # the Game tree
     if lvl == 0 && init:
@@ -46,7 +48,7 @@ func start_game(lvl, init=true, current_hp=starting_hp, total_hp=starting_hp):
     level = LevelFactory.create_level(self, lvl)
     trap_countdown = level.trap_countdown
     trap_active_time = level.trap_countdown
-    player.init(current_hp, total_hp)
+    player.init(current_hp, total_hp, current_dmg)
 
     hud.set_level(lvl)
     hud.set_hp(player.hp, player.total_hp)
@@ -111,7 +113,13 @@ func handle_directional_input(dx, dy):
             if !blocked:
                 player.move(dest_x, dest_y)
                 var item = scan_for_items(dest_x, dest_y)
-                if item && player.hp != starting_hp:
+                if item && item.name == "HealingPotion": 
+                    if player.hp != player.total_hp:
+                        player.pickup(item)
+                        level.items.erase(item)
+                    else:
+                        pass
+                if item && item.name != "HealingPotion":
                     player.pickup(item)
                     level.items.erase(item)
         Tile.Door:
@@ -121,6 +129,7 @@ func handle_directional_input(dx, dy):
             level.play_effect("poof", dest_x * TILE_SIZE, dest_y * TILE_SIZE)
             var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
             player.destroy(dest_x, dest_y, object_item_drop_chance, pos_offset, self)
+
         Tile.Ladder:
             var blocked = false
             for enemy in level.enemies:
@@ -135,7 +144,7 @@ func handle_directional_input(dx, dy):
                 var new_hp = player.hp + 10
                 if new_hp > player.total_hp:
                     new_hp = player.total_hp
-                start_game(current_level, false, new_hp)
+                start_game(current_level, false, new_hp, player.total_hp, player.damage)
         Tile.TrapOff:
             var blocked = false
             for enemy in level.enemies:
@@ -147,7 +156,13 @@ func handle_directional_input(dx, dy):
             if !blocked:
                 player.move(dest_x, dest_y)
                 var item = scan_for_items(dest_x, dest_y)
-                if item && player.hp != starting_hp:
+                if item && item.name == "HealingPotion": 
+                    if player.hp != player.total_hp:
+                        player.pickup(item)
+                        level.items.erase(item)
+                    else:
+                        pass
+                if item && item.name != "HealingPotion":
                     player.pickup(item)
                     level.items.erase(item)
         Tile.TrapOn:
@@ -162,9 +177,16 @@ func handle_directional_input(dx, dy):
             if !blocked:
                 player.move(dest_x, dest_y)
                 var item = scan_for_items(dest_x, dest_y)
-                if item && player.hp != starting_hp:
+                if item && item.name == "HealingPotion": 
+                    if player.hp != player.total_hp:
+                        player.pickup(item)
+                        level.items.erase(item)
+                    else:
+                        pass
+                if item && item.name != "HealingPotion":
                     player.pickup(item)
                     level.items.erase(item)
+
 
 
     # Enemy turn

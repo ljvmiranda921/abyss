@@ -14,7 +14,7 @@ onready var sprite_anim = $AnimatedSprite
 func _ready():
     pass
 
-func init(current_hp, total_hp):
+func init(current_hp, total_hp, damage=30):
     self.hp = current_hp
     self.total_hp = total_hp
     self.damage = damage

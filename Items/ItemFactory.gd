@@ -1,6 +1,7 @@
 class_name ItemFactory
 
 const PotionScene = preload("res://Items/Potion.tscn")
+const SwordScene = preload("res://Items/Sword.tscn")
 
 const ITEM_CONFIG = [
     {
@@ -8,8 +9,16 @@ const ITEM_CONFIG = [
         "description": "Heal small amount of HP upon pickup",
         "effect": "heal_hp",
         "scene": PotionScene,
-        "spawn_probs": 1.0,
+        "spawn_probs": 0.7,
         "acc_weight": 0.0, 
+    },
+    {
+        "name": "SwordUpgrade",
+        "description": "Upgrade damage upon pickup",
+        "effect": "increase_dmg",
+        "scene": SwordScene,
+        "spawn_probs": 0.3,
+        "acc_weight": 0.0,
     },
 ]
 
@@ -72,6 +81,12 @@ class Item extends Reference:
             player.hp = player.total_hp
         else:
             player.hp = new_hp
+
+    func increase_dmg(player, damage_increase = 10):
+        player.get_node("IncAttackEffect").play("default")
+        player.get_node("IncAttackEffect").set_frame(0)
+        var new_dmg = player.damage + damage_increase
+        player.damage = new_dmg
 
 
 
