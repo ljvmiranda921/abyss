@@ -1,9 +1,9 @@
 extends CanvasLayer
 
-onready var level = $Level
-onready var hp = $HP
-onready var dmg = $Damage
-onready var lose = $LoseScreen
+onready var level = $InfoBox/Level
+onready var hp = $InfoBox/HP
+onready var dmg = $InfoBox/Damage
+onready var lose = $Screens/LoseScreen
 
 signal restart_game
 
