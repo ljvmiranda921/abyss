@@ -1,0 +1,34 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path="res://.import/ItemSword.png-27b1ec420b3e42d32ae1aa91e272a688.stex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://art/ItemSword.png"
+dest_files=[ "res://.import/ItemSword.png-27b1ec420b3e42d32ae1aa91e272a688.stex" ]
+
+[params]
+
+compress/mode=0
+compress/lossy_quality=0.7
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=0
+flags/filter=false
+flags/mipmaps=false
+flags/anisotropic=false
+flags/srgb=2
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+stream=false
+size_limit=0
+detect_3d=true
+svg/scale=1.0
