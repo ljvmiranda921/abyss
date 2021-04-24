@@ -68,8 +68,8 @@ class Item extends Reference:
         player.get_node("HealEffect").play("default")
         player.get_node("HealEffect").set_frame(0)
         var new_hp = player.hp + heal_value
-        if new_hp >= 100:
-            player.hp = 100
+        if new_hp > player.total_hp:
+            player.hp = player.total_hp
         else:
             player.hp = new_hp
 

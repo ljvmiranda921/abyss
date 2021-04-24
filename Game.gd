@@ -35,7 +35,7 @@ func _ready():
 
 
 
-func start_game(lvl, init=true):
+func start_game(lvl, init=true, current_hp=starting_hp, total_hp=starting_hp):
     # Add the scenes so that they appear in
     # the Game tree
     if lvl == 0 && init:
@@ -46,10 +46,10 @@ func start_game(lvl, init=true):
     level = LevelFactory.create_level(self, lvl)
     trap_countdown = level.trap_countdown
     trap_active_time = level.trap_countdown
-    player.init(starting_hp)
+    player.init(current_hp, total_hp)
 
     hud.set_level(lvl)
-    hud.set_hp(player.hp)
+    hud.set_hp(player.hp, player.total_hp)
     hud.set_dmg(player.damage)
 
     # Add player and place in level
@@ -132,7 +132,10 @@ func handle_directional_input(dx, dy):
             if !blocked:
                 level.remove()
                 current_level += 1
-                start_game(current_level)
+                var new_hp = player.hp + 10
+                if new_hp > player.total_hp:
+                    new_hp = player.total_hp
+                start_game(current_level, false, new_hp)
         Tile.TrapOff:
             var blocked = false
             for enemy in level.enemies:
@@ -229,7 +232,7 @@ func update_visuals():
     level.update_enemy_positions(player.tile_coord, TILE_SIZE, space_state)
 
     # Update HUD
-    hud.set_hp(player.hp)
+    hud.set_hp(player.hp, player.total_hp)
     hud.set_dmg(player.damage)
 
 
