@@ -1,10 +1,26 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://art/HUD.png" type="Texture" id=1]
 [ext_resource path="res://fonts/alagard.tres" type="DynamicFont" id=2]
 [ext_resource path="res://HUD.gd" type="Script" id=3]
 [ext_resource path="res://fonts/lg_alagard.tres" type="DynamicFont" id=4]
 [ext_resource path="res://art/HUD_Damage.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Fade"
+length = 0.65
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.192157, 0.133333, 0.172549, 0 ), Color( 0.192157, 0.133333, 0.172549, 1 ) ]
+}
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 3 )
@@ -108,5 +124,18 @@ uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="SceneTransitionRect" type="ColorRect" parent="Screens"]
+modulate = Color( 0.192157, 0.133333, 0.172549, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 0.192157, 0.133333, 0.172549, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Screens/SceneTransitionRect"]
+anims/Fade = SubResource( 1 )
 
 [connection signal="pressed" from="Screens/LoseScreen/Button" to="." method="_on_Button_pressed"]
