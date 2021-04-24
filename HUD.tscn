@@ -51,7 +51,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="DamageLogo" type="Sprite" parent="."]
 position = Vector2( 54.8368, 127.452 )
 scale = Vector2( 1.45432, 1.45432 )
 texture = ExtResource( 5 )
