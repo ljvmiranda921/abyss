@@ -29,7 +29,7 @@ const FOREST_ENEMIES = [
         "can_evade": false,
         "offset_divider": 4,
         "hp": 75, 
-        "damage": 15
+        "damage": 20
     },
     {
         "name": "Plantera",
@@ -56,7 +56,7 @@ const FOREST_ENEMIES = [
         "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
-        "hp": 60,
+        "hp": 35,
         "damage": 10
     },
 ]
@@ -113,12 +113,12 @@ const UDRWLD_ENEMIES = [
         "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 4,
-        "drop_chance": 0.70,
+        "drop_chance": 1.00,
         "defend_turns": 0,
         "summon_probs": 0.45,
         "can_evade": false,
         "offset_divider": 6,
-        "hp": 180,
+        "hp": 200,
         "damage": 5
     },
 ]
@@ -130,7 +130,7 @@ const ENEMY_FAMILIARS = [
         "spawn_probs": 0.3,
         "acc_weight": 0.0, 
         "line_of_sight": 4,
-        "drop_chance": 0.30,
+        "drop_chance": 0.0,
         "defend_turns": 0,
         "summon_probs": 0,
         "can_evade": false,
@@ -144,13 +144,13 @@ const ENEMY_FAMILIARS = [
         "spawn_probs": 0.7,
         "acc_weight": 0.0, 
         "line_of_sight": 4,
-        "drop_chance": 0.60,
+        "drop_chance": 0.005,
         "defend_turns": 0,
         "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
         "hp": 50,
-        "damage": 12
+        "damage": 15
     }
 ]
 
