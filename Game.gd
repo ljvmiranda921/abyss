@@ -141,6 +141,8 @@ func handle_directional_input(dx, dy):
                     blocked = true
                     break
             if !blocked:
+                player.move(dest_x, dest_y)
+                call_deferred("update_visuals")
                 hud.transition_player.play("Fade")
                 yield(hud.transition_player, "animation_finished")
                 level.remove()
