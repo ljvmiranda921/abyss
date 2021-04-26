@@ -24,6 +24,8 @@ var level
 onready var player = preload("res://Player/Player.tscn").instance()
 onready var hud = preload("res://HUD.tscn").instance()
 
+onready var tween = get_node("Tween")
+
 func _ready():
     OS.set_window_size(Vector2(1280, 720))
 
@@ -219,6 +221,7 @@ func scan_for_items(x, y):
 
 func combat_player_turn(player, enemy, anim_offset, level):
     player.attack(enemy, anim_offset, level)
+    flicker_sprite(enemy.sprite_node)
     if enemy.dead:
         enemy.remove()
         level.enemies.erase(enemy)
@@ -233,8 +236,8 @@ func update_visuals():
     var destination = player.tile_coord * TILE_SIZE
 
     # Add tweening
-    var move_tween = get_node("Tween")
-    move_tween.interpolate_property(
+    # var move_tween = get_node("Tween")
+    tween.interpolate_property(
             player, 
             "position", 
             player.position, 
@@ -243,8 +246,10 @@ func update_visuals():
             Tween.TRANS_QUAD, 
             Tween.EASE_IN_OUT
     )
+
+
     for enemy in level.enemies:
-        move_tween.interpolate_property(
+        tween.interpolate_property(
             enemy.sprite_node, 
             "position", 
             enemy.sprite_node.position, 
@@ -253,7 +258,7 @@ func update_visuals():
             Tween.TRANS_QUAD, 
             Tween.EASE_IN_OUT
     )
-    move_tween.start()
+    tween.start()
 
     yield(get_tree(), "idle_frame")
 
@@ -265,6 +270,16 @@ func update_visuals():
     hud.set_hp(player.hp, player.total_hp)
     hud.set_dmg(player.damage)
 
+
+func flicker_sprite(node, speed=0.6, 
+        trans_type=Tween.TRANS_BOUNCE, ease_type=Tween.EASE_OUT_IN):
+    tween.interpolate_property(node, "modulate:a", 1, 0, 
+            speed, trans_type, ease_type)
+    tween.start()
+    yield(tween, "tween_completed")
+    tween.interpolate_property(node, "modulate:a", 0, 1, 
+            speed, trans_type, ease_type)
+    tween.start()
 
 func recv_restart_game():
     level.remove()
