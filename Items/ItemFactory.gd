@@ -82,14 +82,14 @@ class Item extends Reference:
         call(effect, player)
 
 
-    func heal_hp(player, heal_value = 15):
+    func heal_hp(player, heal_value=0.10):
         player.get_node("HealEffect").play("default")
         player.get_node("HealEffect").set_frame(0)
-        var new_hp = player.hp + heal_value
+        var new_hp = player.hp + (player.total_hp * heal_value)
         if new_hp > player.total_hp:
-            player.hp = player.total_hp
+            player.hp = int(player.total_hp)
         else:
-            player.hp = new_hp
+            player.hp = int(new_hp)
 
     func increase_dmg(player, damage_increase = 10):
         player.get_node("IncAttackEffect").play("default")
@@ -98,12 +98,12 @@ class Item extends Reference:
         player.damage = new_dmg
 
 
-    func increase_hp(player, hp_increase=30, heal_value=30):
+    func increase_hp(player, hp_increase=30, heal_value=0.20):
         player.get_node("HPUpEffect").play("default")
         player.get_node("HPUpEffect").set_frame(0)
         player.total_hp = player.total_hp + hp_increase
-        var new_hp = player.hp + heal_value
+        var new_hp = player.hp + (player.total_hp * heal_value)
         if new_hp > player.total_hp:
-            player.hp = player.total_hp
+            player.hp = int(player.total_hp)
         else:
-            player.hp = new_hp
+            player.hp = int(new_hp)
