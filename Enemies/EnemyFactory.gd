@@ -135,7 +135,7 @@ const ENEMY_FAMILIARS = [
         "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
-        "hp": 50,
+        "hp": 60,
         "damage": 10
     },
     {
@@ -149,7 +149,7 @@ const ENEMY_FAMILIARS = [
         "summon_probs": 0,
         "can_evade": false,
         "offset_divider": 4,
-        "hp": 50,
+        "hp": 80,
         "damage": 15
     }
 ]
