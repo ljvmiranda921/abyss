@@ -11,6 +11,8 @@ const SkeletonDefenderScene = preload("res://Enemies/CavernEnemies/EnemySkDefend
 const NecromancerScene = preload("res://Enemies/UnderworldEnemies/EnemyNecromancer.tscn")
 const FamiliarScene = preload("res://Enemies/UnderworldEnemies/EnemyFamiliar.tscn")
 
+const BossScene = preload("res://Enemies/UnderworldEnemies/EnemyBoss.tscn")
+
 const TILE_SIZE = 32
 
 # Tilemap reference
@@ -154,11 +156,31 @@ const ENEMY_FAMILIARS = [
     }
 ]
 
+const BOSS_ROOM = [
+    {
+        "name": "Boss",
+        "scene":BossScene, 
+        "spawn_probs": 1.00,
+        "acc_weight": 0.0,
+        "line_of_sight": 5,
+        "drop_chance": 0.0,
+        "defend_turns": 0,
+        "summon_probs": 0.5,
+        "summon_turns": 8, 
+        "can_evade": false,
+        "offset_divider": 4,
+        "hp": 500,
+        "damage": 0
+    }
+]
+
+
 # Only for general mobs
 const ENEMY_DEFINITIONS = [
     FOREST_ENEMIES, 
     CAVERN_ENEMIES, 
-    UDRWLD_ENEMIES
+    UDRWLD_ENEMIES,
+    BOSS_ROOM
 ]
 
 
@@ -174,9 +196,15 @@ static func spawn_enemy(game, level_num, x, y):
     var mobs = ENEMY_DEFINITIONS[level_num]
     var total_weight = init_probabilities(mobs)
     var enemy_def = pick_some_object(mobs, total_weight)
+    var enemy
 
-    var enemy = Enemy.new(game, enemy_def.hp, enemy_def.damage, enemy_def.scene, enemy_def, x, y, 32)
+    if enemy_def.name == "Boss":
+        enemy = Boss.new(game, enemy_def.hp, enemy_def.damage, enemy_def.scene, enemy_def, x, y, 32)
+    else:
+        enemy = Enemy.new(game, enemy_def.hp, enemy_def.damage, enemy_def.scene, enemy_def, x, y, 32)
+
     return enemy
+
 
 static func init_probabilities(basket) -> float:
     var total_weight = 0.0
@@ -185,6 +213,7 @@ static func init_probabilities(basket) -> float:
         item.acc_weight = total_weight
     return total_weight
 
+
 static func pick_some_object(basket, total_weight) -> Dictionary:
     var roll: float = rand_range(0.0, total_weight)
     for item in basket:
@@ -192,6 +221,157 @@ static func pick_some_object(basket, total_weight) -> Dictionary:
             return item
 
     return {}
+
+class Boss extends Reference:
+    var sprite_node
+    var tile_coord
+    var dead = false
+    var line_of_sight
+    var full_hp
+    var current_hp
+    var attack_dmg
+    var drop_chance
+    var game_class
+    var can_summon
+    var summon_probs
+    var starting_summon
+
+    # Status
+    var in_pursuit
+    var can_evade = false
+    var dmg_counter = 0
+    var summon_turns = 0
+
+    # Display
+    var offset_divider = 4
+
+    func _init(game, hp, damage, sprite_scene, enemy_config, x, y, tile_size):
+        sprite_node = sprite_scene.instance()
+        # Setup enemy movement
+        tile_coord = Vector2(x, y)
+        sprite_node.position = tile_coord * tile_size
+        line_of_sight = enemy_config.line_of_sight
+        # Setup enemy HP and logic
+        dead = false
+        full_hp = hp
+        current_hp = full_hp
+        drop_chance = enemy_config.drop_chance
+        game_class = game
+        # Setup enemy combat
+        attack_dmg = damage
+        can_evade = enemy_config.can_evade
+        can_summon = enemy_config.summon_probs > 0
+        summon_probs = enemy_config.summon_probs
+        starting_summon = enemy_config.summon_turns
+        # Setup display
+        offset_divider = enemy_config.offset_divider
+        
+        game.add_child(sprite_node)
+
+    func remove():
+        sprite_node.play("death")
+        if sprite_node.animation == "death" && sprite_node.frame == sprite_node.frames.get_frame_count("death")-1:
+            sprite_node.queue_free()
+
+    func act(level, player):
+        level.statue_countdown()
+        print_debug(level.statue_countdown)
+
+        if !sprite_node.visible:
+            return
+
+        if current_hp < (full_hp * 0.5): 
+            sprite_node.play("walk")
+
+        var enemy_pos = level.enemy_pathfinding.get_closest_point(Vector3(tile_coord.x, tile_coord.y, 0))
+        var player_pos = level.enemy_pathfinding.get_closest_point(Vector3(player.tile_coord.x, player.tile_coord.y, 0))
+        var path = level.enemy_pathfinding.get_point_path(enemy_pos, player_pos)
+
+        if path:
+            # If path exists between enemy and player
+            assert(path.size() > 1)
+            var move_tile = Vector2(path[1].x, path[1].y)
+
+
+            if can_summon:
+                var probs = rand_range(0, 1)
+                if probs > (1 - summon_probs):
+                    sprite_node.play("summon")
+                    # level.summon_familiar(tile_coord.x, tile_coord.y, player.tile_coord, summon_probs)
+                    level.summon_statues()
+                else:
+                    pass
+
+            if move_tile == player.tile_coord:
+                self._attack(player, TILE_SIZE)
+
+            else:
+                var blocked = false
+                for enemy in level.enemies:
+                    if enemy.tile_coord == move_tile:
+                        blocked = true
+                        break
+                if !blocked:
+                    self._move(tile_coord, move_tile, sprite_node, player.tile_coord, level)
+
+
+    func _attack(player, tile_size):
+        # Update enemy animations
+        var dx = (player.tile_coord.x - tile_coord.x) 
+        var dy = (player.tile_coord.y - tile_coord.y)
+        sprite_node.play("attack")
+        sprite_node.slash_effect.play("default")
+        sprite_node.slash_effect.set_frame(0)
+        var offset = Vector2(dx * TILE_SIZE / offset_divider, dy * TILE_SIZE / offset_divider)
+        sprite_node.set_offset(offset)
+        sprite_node.slash_effect.set_offset(offset * 1.824)
+
+        # Send damage to player
+        player.take_damage(attack_dmg)
+
+    func take_damage(dmg, level, player_pos):
+        if dead:
+            return
+
+        current_hp = max(0, current_hp - dmg)
+        if current_hp == 0:
+            dead = true
+
+            # Drop item
+            var probs = rand_range(0, 1)
+            if probs > (1 - drop_chance):
+                ItemFactory.drop_item(game_class, tile_coord.x, tile_coord.y)
+
+
+    func _move(current_pos, dest_pos, enemy_node, player_tile, level):
+        # Set enemy sprite orientation
+        if current_pos.x - dest_pos.x > 0:
+            enemy_node.set_flip_h(true)
+        if current_pos.x - dest_pos.x < 0:
+            enemy_node.set_flip_h(false)
+
+        # Move if player is within line of sight
+        if self._player_is_visible(player_tile):
+
+            if !in_pursuit:
+                in_pursuit = true
+                enemy_node.los_effect.set_frame(0)
+                enemy_node.los_effect.play("default")
+
+            tile_coord = dest_pos
+
+    func _player_is_visible(player_tile):
+        var dx = pow(player_tile.x - tile_coord.x, 2)
+        var dy = pow(player_tile.y - tile_coord.y, 2)
+        var r_2 = pow(line_of_sight, 2)
+        if dx + dy <= r_2:
+            return true
+        else:
+            return false
+        
+
+
+# Generic enemy
 
 
 class Enemy extends Reference:
@@ -279,14 +459,6 @@ class Enemy extends Reference:
                         self._attack(player, TILE_SIZE)
                     else:
                         pass
-                # elif can_summon:
-                #     var probs = rand_range(0, 1)
-                #     print_debug("trying to summon, rolling dice...")
-                #     print_debug(probs)
-                #     if probs > (1 - summon_probs):
-                #         level.summon_familiar(tile_coord.x, tile_coord.y)
-                #     else:
-                #         pass
                 else:
                     self._attack(player, TILE_SIZE)
             else:
@@ -305,7 +477,6 @@ class Enemy extends Reference:
         var dy = (player.tile_coord.y - tile_coord.y)
         sprite_node.play("attack")
         sprite_node.set_offset(Vector2(dx * TILE_SIZE / offset_divider, dy * TILE_SIZE / offset_divider))
-        # sprite_node.z_index = 100
 
         # In case enemy can defend, apply attack reduction
         # to even things out for the player
@@ -315,9 +486,6 @@ class Enemy extends Reference:
 
         # Send damage to player
         player.take_damage(attack_dmg)
-
-
-
 
     func take_damage(dmg, level, player_pos):
         if dead:
@@ -404,8 +572,6 @@ class Enemy extends Reference:
         else:
             return move_tile
 
-
-
     func _player_is_visible(player_tile):
         var dx = pow(player_tile.x - tile_coord.x, 2)
         var dy = pow(player_tile.y - tile_coord.y, 2)
@@ -414,5 +580,3 @@ class Enemy extends Reference:
             return true
         else:
             return false
-        
-

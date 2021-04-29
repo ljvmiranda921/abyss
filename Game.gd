@@ -7,7 +7,7 @@ const NUM_ENEMIES = [15, 30, 8]
 # Game state containers
 var starting_level: int = 0
 var starting_hp: int = 100
-var starting_dmg: int = 30
+var starting_dmg: int = 300
 
 var object_item_drop_chance: float = 0.2
 var trap_countdown
@@ -37,9 +37,30 @@ func _ready():
     # scenes in the game
     hud.connect("restart_game", self, "recv_restart_game")
 
+func start_boss_level(current_hp, total_hp, current_dmg):
+    print_debug("start_boss_level")
+    level = LevelFactory.create_boss_level(self)
+    trap_countdown = level.trap_countdown
+    trap_active_time = level.trap_countdown
+    player.init(current_hp, total_hp, current_dmg)
 
+    hud.set_level(3)
+    hud.set_hp(player.hp, player.total_hp)
+    hud.set_dmg(player.damage)
 
-func start_game(lvl, init=true, current_hp=starting_hp, total_hp=starting_hp, current_dmg=starting_dmg):
+    player.set_tile_coord(level.get_start_coord_boss_level()) 
+    call_deferred("update_visuals")
+
+    # TODO: Add Boss
+    level.add_boss(self, 6, 4)
+
+func start_game(
+        lvl, 
+        init=true, 
+        current_hp=starting_hp, 
+        total_hp=starting_hp, 
+        current_dmg=starting_dmg
+):
     # Add the scenes so that they appear in
     # the Game tree
     if lvl == 0 && init:
@@ -68,7 +89,7 @@ func _input(event):
     if !event.is_pressed():
         return
 
-    # hud.play_transition()
+    # print_debug(player.tile_coord)
 
     if event.is_action_pressed("Left"):
         handle_directional_input(-1, 0)
@@ -128,6 +149,7 @@ func handle_directional_input(dx, dy):
                     level.items.erase(item)
         Tile.Door:
             level.set_tile(dest_x, dest_y, Tile.Ground)
+
         Tile.MapObject:
             level.set_tile(dest_x, dest_y, Tile.Ground)
             level.play_effect("poof", dest_x * TILE_SIZE, dest_y * TILE_SIZE)
@@ -153,8 +175,13 @@ func handle_directional_input(dx, dy):
                 if new_hp > player.total_hp:
                     new_hp = player.total_hp
 
-                start_game(current_level, false, new_hp, player.total_hp, player.damage)
+                start_boss_level(new_hp, player.total_hp, player.damage)
+                # if current_level == 3:  # boss level
+                #     start_boss_level(new_hp, player.total_hp, player.damage)
+                # else:
+                #     start_game(current_level, false, new_hp, player.total_hp, player.damage)
                 hud.transition_player.play_backwards("Fade")
+
         Tile.TrapOff:
             var blocked = false
             for enemy in level.enemies:
@@ -231,8 +258,6 @@ func update_visuals():
     if player.dead:
         hud.lose.visible = true
 
-
-    # player.position = player.tile_coord * TILE_SIZE
     var destination = player.tile_coord * TILE_SIZE
 
     # Add tweening
