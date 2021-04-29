@@ -7,32 +7,43 @@ enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder, TrapOff, Trap
 const ForestScene = preload("res://Level/Forest.tscn")
 const CavernScene = preload("res://Level/Cavern.tscn")
 const UnderworldScene = preload("res://Level/Underworld.tscn")
+const BossScene = preload("res://Level/Boss.tscn")
 
 const LEVEL_CONFIG = [
+    # {
+    #     "name": "Forest",
+    #     "size": Vector2(30, 30),
+    #     "scene": ForestScene,
+    #     "room_count": 8,
+    #     "min_room_dim": 5, 
+    #     "max_room_dim": 8,
+    #     "trap_countdown": 0,
+    #     "trap_damage": 0
+    # },
+    # {
+    #     "name": "Cavern",
+    #     "size": Vector2(50, 50),
+    #     "scene": CavernScene,
+    #     "room_count": 15,
+    #     "min_room_dim": 7, 
+    #     "max_room_dim": 8, 
+    #     "trap_countdown": 3,
+    #     "trap_damage": 5
+    # },
+    # {
+    #     "name": "Underworld",
+    #     "size": Vector2(20, 50),
+    #     "scene": UnderworldScene,
+    #     "room_count": 15,
+    #     "min_room_dim": 5, 
+    #     "max_room_dim": 7, 
+    #     "trap_countdown": 10,
+    #     "trap_damage": 10
+    # },
     {
-        "name": "Forest",
-        "size": Vector2(30, 30),
-        "scene": ForestScene,
-        "room_count": 8,
-        "min_room_dim": 5, 
-        "max_room_dim": 8,
-        "trap_countdown": 0,
-        "trap_damage": 0
-    },
-    {
-        "name": "Cavern",
-        "size": Vector2(50, 50),
-        "scene": CavernScene,
-        "room_count": 15,
-        "min_room_dim": 7, 
-        "max_room_dim": 8, 
-        "trap_countdown": 3,
-        "trap_damage": 5
-    },
-    {
-        "name": "Underworld",
-        "size": Vector2(20, 50),
-        "scene": UnderworldScene,
+        "name": "Boss",
+        "size": Vector2(13, 22),
+        "scene": BossScene,
         "room_count": 15,
         "min_room_dim": 5, 
         "max_room_dim": 7, 
@@ -46,6 +57,13 @@ const LEVEL_CONFIG = [
 static func create_level(game, level_num):
     var level_cfg = LEVEL_CONFIG[level_num]
     var level = Level.new(level_cfg.scene, game, level_cfg)
+    return level
+
+
+static func create_boss_level(game):
+    print_debug("creating_boss_level")
+    var level_cfg = LEVEL_CONFIG[0]
+    var level = Level.new(level_cfg.scene, game, level_cfg, true)
     return level
     
 
@@ -68,7 +86,7 @@ class Level extends Reference:
     var trap_damage
     var trap_on = false
 
-    func _init(scene, game, config):
+    func _init(scene, game, config, boss_level=false):
         level_node = scene.instance()
         level_size = config.size
         room_count = config.room_count
@@ -79,10 +97,12 @@ class Level extends Reference:
         game_copy = game
 
         game.add_child(level_node)
-
         randomize()
-        self.build_level()
-        self.place_end_ladder()
+        if !boss_level:
+            self.build_level()
+            self.place_end_ladder()
+        else:
+            self.build_boss_level()
 
     func remove():
         rooms.clear()
@@ -114,6 +134,8 @@ class Level extends Reference:
         var y = start_room.position.y + 1 + randi() % int(start_room.size.y - 3)
         return Vector2(x, y)
 
+    func get_start_coord_boss_level() -> Vector2:
+        return Vector2(6,20)
 
     func play_effect(effect, x, y):
         if effect == "poof":
@@ -128,6 +150,7 @@ class Level extends Reference:
 
     func set_tile(x, y, type):
         map[x][y] = type
+
         level_node.tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
 
         if type == Tile.Ground:
@@ -243,6 +266,12 @@ class Level extends Reference:
                     var enemy = EnemyFactory.spawn_familiar(game_copy, test_position.x, test_position.y)
                     enemies.append(enemy)
 
+    func add_boss(game, x, y):
+        # TODO
+        var boss = EnemyFactory.spawn_enemy(game, 0, x, y)
+        enemies.append(boss)
+
+
 
     func add_enemies(game, level_num, num_enemies):
         for i in range(num_enemies):
@@ -286,6 +315,36 @@ class Level extends Reference:
 
     func _tile_to_pixel_center(x, y, tile_size: int):
         return Vector2((x + 0.5) * tile_size, (y + 0.5) * tile_size)
+
+    func build_boss_level():
+        map.clear()
+        for enemy in enemies:
+            enemy.remove()
+        enemies.clear()
+
+        for item in items:
+            item.remove()
+        items.clear()
+
+        enemy_pathfinding = AStar.new()
+
+        for x in range(level_size.x):
+            map.append([])
+            for y in range(level_size.y):
+                var cell_type = level_node.tile_map.get_cell(x, y)
+                if cell_type:
+                    map[x].append(cell_type)
+                else:
+                    map[x].append(Tile.OuterWall)
+
+        for x in range(level_size.x):
+            for y in range(level_size.y):
+                level_node.visibility_map.set_cell(x, y, 0)
+                var cell_type = map[x][y]
+                if cell_type == Tile.MapObject:
+                    pass
+                else:
+                    set_tile(x, y, cell_type)
 
     func build_level():
         # Clear containers first
