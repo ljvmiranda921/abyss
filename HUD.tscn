@@ -98,18 +98,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="Screens/LoseScreen"]
-margin_left = 270.854
-margin_top = 241.499
-margin_right = 382.854
-margin_bottom = 277.499
-custom_fonts/font = ExtResource( 2 )
-text = "Restart"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Screens/LoseScreen"]
+[node name="YouDied" type="Label" parent="Screens/LoseScreen"]
 margin_left = 98.5052
 margin_top = 88.4949
 margin_right = 548.505
@@ -121,6 +110,21 @@ text = "YOU DIED"
 align = 1
 valign = 1
 uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PressAnyKey" type="Label" parent="Screens/LoseScreen"]
+margin_left = 97.091
+margin_top = 183.076
+margin_right = 547.091
+margin_bottom = 314.076
+size_flags_stretch_ratio = 0.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.929412, 0.929412, 0.929412, 1 )
+text = "Press any key to restart"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -138,4 +142,4 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Screens/SceneTransitionRect"]
 anims/Fade = SubResource( 1 )
 
-[connection signal="pressed" from="Screens/LoseScreen/Button" to="." method="_on_Button_pressed"]
+[connection signal="gui_input" from="Screens/LoseScreen" to="." method="_on_LoseScreen_gui_input"]

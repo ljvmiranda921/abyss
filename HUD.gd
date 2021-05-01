@@ -9,6 +9,11 @@ onready var transition_player = $Screens/SceneTransitionRect/AnimationPlayer
 
 signal restart_game
 
+func _input(event):
+    if event is InputEventKey && lose.visible:
+        if event.pressed:
+            emit_signal("restart_game")
+
 func set_level(val):
     level.text =  "Act " + str(val+1)
 
@@ -27,6 +32,3 @@ func play_fade_in():
     yield(transition_player, "animation_finished")
     transition_player.play_backwards("Fade")
     # yield(transition_player, "animation_finished")
-
-func _on_Button_pressed():
-    emit_signal("restart_game")
