@@ -7,7 +7,7 @@ const NUM_ENEMIES = [15, 30, 8]
 # Game state containers
 var starting_level: int = 0
 var starting_hp: int = 100
-var starting_dmg: int = 300
+var starting_dmg: int = 30
 
 var object_item_drop_chance: float = 0.2
 var trap_countdown
@@ -19,7 +19,6 @@ var current_level = 0
 enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder, TrapOff, TrapOn}
 
 # Scene instances
-# onready var level = preload("res://Level/Forest.tscn").instance()
 var level
 onready var player = preload("res://Player/Player.tscn").instance()
 onready var hud = preload("res://HUD.tscn").instance()
@@ -51,7 +50,6 @@ func start_boss_level(current_hp, total_hp, current_dmg):
     player.set_tile_coord(level.get_start_coord_boss_level()) 
     call_deferred("update_visuals")
 
-    # TODO: Add Boss
     level.add_boss(self, 6, 4)
 
 func start_game(
@@ -175,11 +173,10 @@ func handle_directional_input(dx, dy):
                 if new_hp > player.total_hp:
                     new_hp = player.total_hp
 
-                start_boss_level(new_hp, player.total_hp, player.damage)
-                # if current_level == 3:  # boss level
-                #     start_boss_level(new_hp, player.total_hp, player.damage)
-                # else:
-                #     start_game(current_level, false, new_hp, player.total_hp, player.damage)
+                if current_level == 3:  # boss level
+                    start_boss_level(new_hp, player.total_hp, player.damage)
+                else:
+                    start_game(current_level, false, new_hp, player.total_hp, player.damage)
                 hud.transition_player.play_backwards("Fade")
 
         Tile.TrapOff:

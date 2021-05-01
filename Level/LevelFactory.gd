@@ -10,36 +10,36 @@ const UnderworldScene = preload("res://Level/Underworld.tscn")
 const BossScene = preload("res://Level/Boss.tscn")
 
 const LEVEL_CONFIG = [
-    # {
-    #     "name": "Forest",
-    #     "size": Vector2(30, 30),
-    #     "scene": ForestScene,
-    #     "room_count": 8,
-    #     "min_room_dim": 5, 
-    #     "max_room_dim": 8,
-    #     "trap_countdown": 0,
-    #     "trap_damage": 0
-    # },
-    # {
-    #     "name": "Cavern",
-    #     "size": Vector2(50, 50),
-    #     "scene": CavernScene,
-    #     "room_count": 15,
-    #     "min_room_dim": 7, 
-    #     "max_room_dim": 8, 
-    #     "trap_countdown": 3,
-    #     "trap_damage": 5
-    # },
-    # {
-    #     "name": "Underworld",
-    #     "size": Vector2(20, 50),
-    #     "scene": UnderworldScene,
-    #     "room_count": 15,
-    #     "min_room_dim": 5, 
-    #     "max_room_dim": 7, 
-    #     "trap_countdown": 10,
-    #     "trap_damage": 10
-    # },
+    {
+        "name": "Forest",
+        "size": Vector2(30, 30),
+        "scene": ForestScene,
+        "room_count": 8,
+        "min_room_dim": 5, 
+        "max_room_dim": 8,
+        "trap_countdown": 0,
+        "trap_damage": 0
+    },
+    {
+        "name": "Cavern",
+        "size": Vector2(50, 50),
+        "scene": CavernScene,
+        "room_count": 15,
+        "min_room_dim": 7, 
+        "max_room_dim": 8, 
+        "trap_countdown": 3,
+        "trap_damage": 5
+    },
+    {
+        "name": "Underworld",
+        "size": Vector2(20, 50),
+        "scene": UnderworldScene,
+        "room_count": 15,
+        "min_room_dim": 5, 
+        "max_room_dim": 7, 
+        "trap_countdown": 10,
+        "trap_damage": 10
+    },
     {
         "name": "Boss",
         "size": Vector2(13, 22),
@@ -62,7 +62,7 @@ static func create_level(game, level_num):
 
 static func create_boss_level(game):
     print_debug("creating_boss_level")
-    var level_cfg = LEVEL_CONFIG[0]
+    var level_cfg = LEVEL_CONFIG[3]
     var level = Level.new(level_cfg.scene, game, level_cfg, true)
     return level
     
@@ -85,6 +85,9 @@ class Level extends Reference:
     var trap_countdown
     var trap_damage
     var trap_on = false
+
+    var statue_countdown = [16, 16, 16, 16]
+    var statue_positions = [Vector2(4, 4), Vector2(8, 4), Vector2(8, 7), Vector2(4, 7)]
 
     func _init(scene, game, config, boss_level=false):
         level_node = scene.instance()
@@ -148,10 +151,13 @@ class Level extends Reference:
             level_node.cast_effect.set_frame(0)
 
 
-    func set_tile(x, y, type):
+    func set_tile(x, y, type, use_subtile=true):
         map[x][y] = type
 
-        level_node.tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
+        if use_subtile:
+            level_node.tile_map.set_cell(x, y, type, false, false, false, _get_subtile(type))
+        else:
+            level_node.tile_map.set_cell(x, y, type, false, false, false)
 
         if type == Tile.Ground:
             clear_path(Vector2(x, y))
@@ -176,6 +182,40 @@ class Level extends Reference:
                 if tile_type == Tile.TrapOn:
                     set_tile(x, y, Tile.TrapOff)
                     trap_on = false
+
+    func summon_statues(countdown=8):
+        for idx in range(statue_positions.size()):
+            var tile_position = statue_positions[idx]
+            var tile_type = map[tile_position.x][tile_position.y]
+            if tile_type != Tile.MapObject:
+                _play_poof(idx)
+                set_tile(tile_position.x, tile_position.y, Tile.MapObject, false)
+                statue_countdown[idx] = countdown
+            else:
+                pass
+
+    func _play_poof(statue_idx):
+        level_node.statue_poof[statue_idx].play("default")
+        level_node.statue_poof[statue_idx].set_frame(0)
+
+    func statue_countdown():
+        for idx in range(statue_countdown.size()):
+            var tile_position = statue_positions[idx]
+            var tile_type = map[tile_position.x][tile_position.y]
+            if tile_type == Tile.MapObject:
+                statue_countdown[idx] = max(0, statue_countdown[idx] - 1)
+            else:
+                pass
+
+        for idx in range(statue_countdown.size()):
+            var tile_position = statue_positions[idx]
+            var tile_type = map[tile_position.x][tile_position.y]
+
+            if statue_countdown[idx] == 0 && tile_type == Tile.MapObject:
+                _play_poof(idx)
+                var enemy = EnemyFactory.spawn_familiar(game_copy, tile_position.x, tile_position.y, true)
+                enemies.append(enemy)
+                set_tile(tile_position.x, tile_position.y, Tile.Ground)
 
 
     func _get_farthest_room_from_start():
@@ -268,7 +308,7 @@ class Level extends Reference:
 
     func add_boss(game, x, y):
         # TODO
-        var boss = EnemyFactory.spawn_enemy(game, 0, x, y)
+        var boss = EnemyFactory.spawn_enemy(game, 3, x, y)
         enemies.append(boss)
 
 
@@ -342,7 +382,7 @@ class Level extends Reference:
                 level_node.visibility_map.set_cell(x, y, 0)
                 var cell_type = map[x][y]
                 if cell_type == Tile.MapObject:
-                    pass
+                    set_tile(x, y, cell_type, false)
                 else:
                     set_tile(x, y, cell_type)
 
