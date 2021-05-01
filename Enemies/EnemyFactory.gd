@@ -12,6 +12,7 @@ const NecromancerScene = preload("res://Enemies/UnderworldEnemies/EnemyNecromanc
 const FamiliarScene = preload("res://Enemies/UnderworldEnemies/EnemyFamiliar.tscn")
 
 const BossScene = preload("res://Enemies/UnderworldEnemies/EnemyBoss.tscn")
+const BossFamiliarScene = preload("res://Enemies/UnderworldEnemies/EnemyBossFamiliar.tscn")
 
 const TILE_SIZE = 32
 
@@ -165,12 +166,32 @@ const BOSS_ROOM = [
         "line_of_sight": 5,
         "drop_chance": 0.0,
         "defend_turns": 0,
-        "summon_probs": 0.5,
+        "summon_probs": 0.1,
         "summon_turns": 8, 
         "can_evade": false,
         "offset_divider": 4,
+        "aggro": 0.2,
         "hp": 500,
-        "damage": 0
+        "damage": 30
+    }
+]
+
+
+const BOSS_FAMILIARS = [
+    {
+        "name": "BossFamiliar",
+        "scene":BossFamiliarScene, 
+        "spawn_probs": 1.00,
+        "acc_weight": 0.0,
+        "line_of_sight": 4,
+        "drop_chance": 0.0,
+        "defend_turns": 0,
+        "summon_probs": 0,
+        "summon_turns": 0, 
+        "can_evade": false,
+        "offset_divider": 4,
+        "hp": 120,
+        "damage": 10
     }
 ]
 
@@ -184,8 +205,13 @@ const ENEMY_DEFINITIONS = [
 ]
 
 
-static func spawn_familiar(game, x, y):
-    var mobs = ENEMY_FAMILIARS
+static func spawn_familiar(game, x, y, boss = false):
+    var mobs
+    if !boss:
+        mobs = ENEMY_FAMILIARS
+    else:
+        mobs = BOSS_FAMILIARS
+
     var total_weight = init_probabilities(mobs)
     var enemy_def = pick_some_object(mobs, total_weight)
     var enemy = Enemy.new(game, enemy_def.hp, enemy_def.damage, enemy_def.scene, enemy_def, x, y, 32)
@@ -235,6 +261,7 @@ class Boss extends Reference:
     var can_summon
     var summon_probs
     var starting_summon
+    var aggro = 0.2
 
     # Status
     var in_pursuit
@@ -263,6 +290,7 @@ class Boss extends Reference:
         can_summon = enemy_config.summon_probs > 0
         summon_probs = enemy_config.summon_probs
         starting_summon = enemy_config.summon_turns
+        aggro = enemy_config.aggro
         # Setup display
         offset_divider = enemy_config.offset_divider
         
@@ -275,12 +303,12 @@ class Boss extends Reference:
 
     func act(level, player):
         level.statue_countdown()
-        print_debug(level.statue_countdown)
 
         if !sprite_node.visible:
             return
 
         if current_hp < (full_hp * 0.5): 
+            aggro = 0.85
             sprite_node.play("walk")
 
         var enemy_pos = level.enemy_pathfinding.get_closest_point(Vector3(tile_coord.x, tile_coord.y, 0))
@@ -313,6 +341,40 @@ class Boss extends Reference:
                         break
                 if !blocked:
                     self._move(tile_coord, move_tile, sprite_node, player.tile_coord, level)
+
+
+    func _get_evade_pos(current_pos, default_pos, level):
+        # Choose a position around the enemy while avoiding the player
+        var offsets = [Vector2(0, 1), Vector2(1, 0), Vector2(0, -1), Vector2(-1, 0)]
+
+        for idx in offsets.size():
+            if current_pos + offsets[idx] == default_pos:
+                offsets.remove(idx)
+                break
+
+        var unblocked_tiles = []
+        for offset in offsets:
+            var test_tile  = current_pos + offset
+            var blocked = true
+
+            for enemy in level.enemies:
+                if enemy.tile_coord == test_tile:
+                    blocked = true
+                    break
+
+                var tile_type = level.get_tile_type(test_tile.x, test_tile.y)
+                match tile_type:
+                    Tile.Ground:
+                        blocked = false
+
+                if !blocked:
+                    unblocked_tiles.append(test_tile)
+
+        if unblocked_tiles.size() == 0:
+            return default_pos
+        else:
+            var move_tile = unblocked_tiles[randi() % unblocked_tiles.size()]
+            return move_tile
 
 
     func _attack(player, tile_size):
@@ -357,6 +419,12 @@ class Boss extends Reference:
                 in_pursuit = true
                 enemy_node.los_effect.set_frame(0)
                 enemy_node.los_effect.play("default")
+
+            tile_coord = dest_pos
+
+            var probs = rand_range(0, 1)
+            if probs > aggro:
+                dest_pos = self._get_evade_pos(current_pos, dest_pos, level)
 
             tile_coord = dest_pos
 

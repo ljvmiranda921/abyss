@@ -160,9 +160,10 @@ animations = [ {
 position = Vector2( 0, -0.667419 )
 scale = Vector2( 1.05, 1.05 )
 frames = SubResource( 18 )
-frame = 2
+frame = 1
 playing = true
 centered = false
+offset = Vector2( -4, 0 )
 script = ExtResource( 3 )
 
 [node name="SlashEffect" type="AnimatedSprite" parent="."]
