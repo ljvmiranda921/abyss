@@ -171,8 +171,8 @@ const BOSS_ROOM = [
         "can_evade": false,
         "offset_divider": 4,
         "aggro": 0.2,
-        "hp": 500,
-        "damage": 30
+        "hp": 300,
+        "damage": 20
     }
 ]
 
@@ -190,8 +190,8 @@ const BOSS_FAMILIARS = [
         "summon_turns": 0, 
         "can_evade": false,
         "offset_divider": 4,
-        "hp": 120,
-        "damage": 10
+        "hp": 90,
+        "damage": 5
     }
 ]
 
