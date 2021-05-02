@@ -85,11 +85,9 @@ class Item extends Reference:
     func heal_hp(player, heal_value=0.10):
         player.get_node("HealEffect").play("default")
         player.get_node("HealEffect").set_frame(0)
-        var new_hp = player.hp + (player.total_hp * heal_value)
-        if new_hp > player.total_hp:
-            player.hp = int(player.total_hp)
-        else:
-            player.hp = int(new_hp)
+        var new_hp = min(player.total_hp, int(player.hp + (heal_value * player.total_hp)))
+        player.hp = new_hp
+
 
     func increase_dmg(player, damage_increase = 10):
         player.get_node("IncAttackEffect").play("default")
@@ -102,8 +100,5 @@ class Item extends Reference:
         player.get_node("HPUpEffect").play("default")
         player.get_node("HPUpEffect").set_frame(0)
         player.total_hp = player.total_hp + hp_increase
-        var new_hp = player.hp + (player.total_hp * heal_value)
-        if new_hp > player.total_hp:
-            player.hp = int(player.total_hp)
-        else:
-            player.hp = int(new_hp)
+        var new_hp = min(player.total_hp, int(player.hp + (heal_value * player.total_hp)))
+        player.hp = new_hp

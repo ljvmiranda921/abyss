@@ -169,10 +169,7 @@ func handle_directional_input(dx, dy):
                 yield(hud.transition_player, "animation_finished")
                 level.remove()
                 current_level += 1
-                var new_hp = player.hp + 10
-                if new_hp > player.total_hp:
-                    new_hp = player.total_hp
-
+                var new_hp = min(player.total_hp, int(player.hp + (0.5 * player.total_hp)))
                 if current_level == 3:  # boss level
                     start_boss_level(new_hp, player.total_hp, player.damage)
                 else:
