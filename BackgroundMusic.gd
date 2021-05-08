@@ -49,7 +49,7 @@ class Track:
 
 
 var _tracks = []
-var _volume = 1.0
+var _volume = 0
 
 
 func _ready():
