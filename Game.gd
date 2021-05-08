@@ -38,7 +38,8 @@ func _ready():
     hud.connect("restart_game", self, "recv_restart_game")
 
 func start_boss_level(current_hp, total_hp, current_dmg):
-    print_debug("start_boss_level")
+    BackgroundMusic.stop_all()
+    BackgroundMusic.play(preload("res://music/boss.ogg"))
     level = LevelFactory.create_boss_level(self)
     trap_countdown = level.trap_countdown
     trap_active_time = level.trap_countdown
@@ -262,6 +263,8 @@ func combat_player_turn(player, enemy, anim_offset, level):
 
 func update_visuals():
     if player.dead:
+        BackgroundMusic.stop_all()
+        BackgroundMusic.play(preload("res://music/death.wav"))
         hud.lose.visible = true
 
     var destination = player.tile_coord * TILE_SIZE
