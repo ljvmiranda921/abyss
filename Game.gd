@@ -59,6 +59,8 @@ func start_game(
         total_hp=starting_hp, 
         current_dmg=starting_dmg
 ):
+
+    BackgroundMusic.play_level(lvl)
     # Add the scenes so that they appear in
     # the Game tree
     if lvl == 0 && init:
