@@ -22,6 +22,7 @@ enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder, TrapOff, Trap
 var level
 onready var player = preload("res://Player/Player.tscn").instance()
 onready var hud = preload("res://HUD.tscn").instance()
+onready var sfx_player = $SFXPlayer
 
 onready var tween = get_node("Tween")
 
@@ -148,9 +149,11 @@ func handle_directional_input(dx, dy):
                     player.pickup(item)
                     level.items.erase(item)
         Tile.Door:
+            sfx_player.get_node("OpenDoor").play()
             level.set_tile(dest_x, dest_y, Tile.Ground)
 
         Tile.MapObject:
+            sfx_player.get_node("BreakObject").play()
             level.set_tile(dest_x, dest_y, Tile.Ground)
             level.play_effect("poof", dest_x * TILE_SIZE, dest_y * TILE_SIZE)
             var pos_offset = Vector2(dx * TILE_SIZE / 4, dy * TILE_SIZE / 4)
@@ -167,6 +170,7 @@ func handle_directional_input(dx, dy):
             if !blocked:
                 player.move(dest_x, dest_y)
                 call_deferred("update_visuals")
+                sfx_player.get_node("ClimbLadder").play()
                 hud.transition_player.play("Fade")
                 yield(hud.transition_player, "animation_finished")
                 level.remove()
@@ -219,6 +223,12 @@ func handle_directional_input(dx, dy):
                 if item && item.name != "HealingPotion":
                     player.pickup(item)
                     level.items.erase(item)
+
+        Tile.InnerWall:
+            sfx_player.get_node("BumpWall").play()
+
+        Tile.OuterWall:
+            sfx_player.get_node("BumpWall").play()
 
 
 

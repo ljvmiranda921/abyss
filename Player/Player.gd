@@ -10,6 +10,7 @@ var dead: bool = false
 var tile_coord: Vector2
 
 onready var sprite_anim = $AnimatedSprite
+onready var sfx_player = $SFXPlayer
 
 func _ready():
     pass
@@ -24,10 +25,12 @@ func set_tile_coord(coord: Vector2):
     tile_coord = coord
 
 func move(dest_x, dest_y):
+    sfx_player.get_node("Move").play()
     tile_coord = Vector2(dest_x, dest_y)
 
 
 func attack(enemy, anim_offset, level):
+    sfx_player.get_node("Attack").play()
     # Update animation
     _animate_attack(sprite_anim, anim_offset)
 
