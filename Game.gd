@@ -27,15 +27,17 @@ onready var sfx_player = $SFXPlayer
 onready var tween = get_node("Tween")
 
 func _ready():
-    OS.set_window_size(Vector2(1280, 720))
-
+    OS.set_window_size(Vector2(960, 540))
     # Start game at Level 0
     current_level = starting_level
     start_game(starting_level)
-
     # Connect to signals emitted by other
     # scenes in the game
     hud.connect("restart_game", self, "recv_restart_game")
+
+func recv_restart_game():
+    get_tree().change_scene("res://StartScreen.tscn")
+
 
 func start_boss_level(current_hp, total_hp, current_dmg):
     BackgroundMusic.stop_all()
@@ -92,7 +94,6 @@ func _input(event):
         return
 
     # print_debug(player.tile_coord)
-
     if event.is_action_pressed("Left"):
         handle_directional_input(-1, 0)
         player.get_node("AnimatedSprite").set_flip_h(true)
@@ -315,8 +316,3 @@ func flicker_sprite(node, speed=0.6,
             speed, trans_type, ease_type)
     tween.start()
 
-func recv_restart_game():
-    level.remove()
-    current_level = starting_level
-    start_game(starting_level, false)
-    hud.lose.visible = false
