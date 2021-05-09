@@ -4,6 +4,7 @@ onready var level = $InfoBox/Level
 onready var hp = $InfoBox/HP
 onready var dmg = $InfoBox/Damage
 onready var lose = $Screens/LoseScreen
+onready var start = $Screens/StartScreen
 onready var transition = $Screens/SceneTransitionRect
 onready var transition_player = $Screens/SceneTransitionRect/AnimationPlayer
 
