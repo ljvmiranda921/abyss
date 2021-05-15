@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/boss_summon_statue.wav-7efe0ac5ee9cc471a92fd7abc6919d48.sample"
+
+[deps]
+
+source_file="res://sfx/boss_summon_statue.wav"
+dest_files=[ "res://.import/boss_summon_statue.wav-7efe0ac5ee9cc471a92fd7abc6919d48.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
