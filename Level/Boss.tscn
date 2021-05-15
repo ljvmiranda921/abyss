@@ -1,10 +1,11 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://art/UndwldTileset.png" type="Texture" id=1]
 [ext_resource path="res://Level/Boss.gd" type="Script" id=2]
 [ext_resource path="res://art/EffectCast.png" type="Texture" id=3]
 [ext_resource path="res://art/Visibility.png" type="Texture" id=4]
 [ext_resource path="res://art/EffectPoof.png" type="Texture" id=5]
+[ext_resource path="res://sfx/boss_summon_statue.wav" type="AudioStream" id=6]
 
 [sub_resource type="ConvexPolygonShape2D" id=38]
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
@@ -483,3 +484,10 @@ frame = 6
 playing = true
 centered = false
 offset = Vector2( 52.8938, -47.2987 )
+
+[node name="SFXPlayer" type="Node" parent="."]
+
+[node name="SummonStatues" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 6 )
+
+[node name="PlaceLadder" type="AudioStreamPlayer" parent="SFXPlayer"]

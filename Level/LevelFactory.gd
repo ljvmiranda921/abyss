@@ -189,6 +189,7 @@ class Level extends Reference:
             var tile_type = map[tile_position.x][tile_position.y]
             if tile_type != Tile.MapObject:
                 _play_poof(idx)
+                level_node.sfx_player.get_node("SummonStatues").play()
                 set_tile(tile_position.x, tile_position.y, Tile.MapObject, false)
                 statue_countdown[idx] = countdown
             else:
@@ -244,10 +245,13 @@ class Level extends Reference:
     func place_end_ladder():
         var end_room
         var probs = rand_range(0, 1)
-        if probs > 0.5:
-            end_room = rooms.back()
-        else:
-            end_room = _get_farthest_room_from_start()
+        # FIXME if probs > 0.5:
+        #     end_room = rooms.back()
+        # else:
+        #     end_room = _get_farthest_room_from_start()
+
+        end_room = rooms.front()
+
 
         # Add ladder to room
         var ladder_x = end_room.position.x + 1 + randi() % int(end_room.size.x - 2)

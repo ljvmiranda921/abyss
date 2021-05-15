@@ -12,3 +12,5 @@ onready var statue3 = $StatueEffects/StatuePoof3
 onready var statue4 = $StatueEffects/StatuePoof4
 
 onready var statue_poof = [statue1, statue2, statue3, statue4]
+
+onready var sfx_player = $SFXPlayer
