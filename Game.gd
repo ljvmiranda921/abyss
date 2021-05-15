@@ -93,7 +93,6 @@ func _input(event):
     if !event.is_pressed():
         return
 
-    # print_debug(player.tile_coord)
     if event.is_action_pressed("Left"):
         handle_directional_input(-1, 0)
         player.get_node("AnimatedSprite").set_flip_h(true)
@@ -108,6 +107,17 @@ func _input(event):
         handle_directional_input(0, 1)
 
     check_for_traps(player)
+
+
+func check_if_ladder_found(player):
+    if player.ladder_found:
+        return
+    else:
+        if level.ladder_exposed():
+            player.sfx_player.get_node("LadderFound").play()
+            player.ladder_found = true
+        else:
+            return
 
 
 func check_for_traps(player):
@@ -269,6 +279,8 @@ func update_visuals():
         hud.lose.visible = true
 
     var destination = player.tile_coord * TILE_SIZE
+    if current_level != 3:
+        check_if_ladder_found(player)
 
     # Add tweening
     # var move_tween = get_node("Tween")

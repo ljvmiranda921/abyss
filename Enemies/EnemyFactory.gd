@@ -249,6 +249,7 @@ static func pick_some_object(basket, total_weight) -> Dictionary:
     return {}
 
 class Boss extends Reference:
+    var name
     var sprite_node
     var tile_coord
     var dead = false
@@ -274,6 +275,7 @@ class Boss extends Reference:
 
     func _init(game, hp, damage, sprite_scene, enemy_config, x, y, tile_size):
         sprite_node = sprite_scene.instance()
+        name = enemy_config.name
         # Setup enemy movement
         tile_coord = Vector2(x, y)
         sprite_node.position = tile_coord * tile_size
@@ -302,7 +304,10 @@ class Boss extends Reference:
             sprite_node.queue_free()
 
         # Add ladder
+        game_class.level.level_node.sfx_player.get_node("PlaceLadder").play()
         game_class.level.set_tile(6, 6, Tile.Ladder)
+        game_class.level.statue_countdown = [1000, 1000, 1000, 1000]
+        BackgroundMusic.stop_all()
 
     func act(level, player):
         level.statue_countdown()
@@ -446,6 +451,7 @@ class Boss extends Reference:
 
 
 class Enemy extends Reference:
+    var name
     var sprite_node
     var tile_coord
     var dead = false
@@ -471,6 +477,7 @@ class Enemy extends Reference:
 
     func _init(game, hp, damage, sprite_scene, enemy_config, x, y, tile_size):
         sprite_node = sprite_scene.instance()
+        name = enemy_config.name
         # Setup enemy movement
         tile_coord = Vector2(x, y)
         sprite_node.position = tile_coord * tile_size

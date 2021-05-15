@@ -5,6 +5,7 @@ var hp: int = 100
 var total_hp: int = 100
 var damage: int = 30
 var dead: bool = false
+var ladder_found: bool = false
 
 # Containers
 var tile_coord: Vector2
@@ -15,11 +16,12 @@ onready var sfx_player = $SFXPlayer
 func _ready():
     pass
 
-func init(current_hp, total_hp, damage=30):
+func init(current_hp, total_hp, damage=30, ladder_found=false):
     self.hp = current_hp
     self.total_hp = total_hp
     self.damage = damage
     self.dead = false
+    self.ladder_found = ladder_found
 
 func set_tile_coord(coord: Vector2):
     tile_coord = coord
