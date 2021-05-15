@@ -61,7 +61,6 @@ static func create_level(game, level_num):
 
 
 static func create_boss_level(game):
-    print_debug("creating_boss_level")
     var level_cfg = LEVEL_CONFIG[3]
     var level = Level.new(level_cfg.scene, game, level_cfg, true)
     return level
@@ -75,6 +74,7 @@ class Level extends Reference:
     var min_room_dim
     var max_room_dim
     var game_copy
+    var ladder_position
 
     var map = []
     var rooms = []
@@ -241,22 +241,30 @@ class Level extends Reference:
         var farthest_room_idx = room_distances.find(max_dist)
         return rooms[farthest_room_idx]
 
+    func ladder_exposed():
+        var visibility_idx = level_node.visibility_map.get_cellv(ladder_position)
+        if visibility_idx == -1:
+            return true
+        else:
+            return false
+
 
     func place_end_ladder():
         var end_room
         var probs = rand_range(0, 1)
-        # FIXME if probs > 0.5:
-        #     end_room = rooms.back()
-        # else:
-        #     end_room = _get_farthest_room_from_start()
+        if probs > 0.5:
+            end_room = rooms.back()
+        else:
+            end_room = _get_farthest_room_from_start()
 
-        end_room = rooms.front()
+        # DEBUGGING end_room = rooms.front()
 
 
         # Add ladder to room
         var ladder_x = end_room.position.x + 1 + randi() % int(end_room.size.x - 2)
         var ladder_y = end_room.position.y + 1 + randi() % int(end_room.size.y - 2)
         set_tile(ladder_x, ladder_y, Tile.Ladder)
+        ladder_position = Vector2(ladder_x, ladder_y)
         
 
     func update_visibility_map(player_tile: Vector2, tile_size: int, space_state):
@@ -311,10 +319,8 @@ class Level extends Reference:
                     enemies.append(enemy)
 
     func add_boss(game, x, y):
-        # TODO
         var boss = EnemyFactory.spawn_enemy(game, 3, x, y)
         enemies.append(boss)
-
 
 
     func add_enemies(game, level_num, num_enemies):
