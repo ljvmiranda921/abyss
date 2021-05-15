@@ -3,7 +3,7 @@
 [ext_resource path="res://art/HUD.png" type="Texture" id=1]
 [ext_resource path="res://fonts/alagard.tres" type="DynamicFont" id=2]
 [ext_resource path="res://HUD.gd" type="Script" id=3]
-[ext_resource path="res://fonts/lg_alagard.tres" type="DynamicFont" id=4]
+[ext_resource path="res://art/DeathScreen.png" type="Texture" id=4]
 [ext_resource path="res://art/HUD_Damage.png" type="Texture" id=5]
 
 [sub_resource type="Animation" id=1]
@@ -87,44 +87,14 @@ __meta__ = {
 
 [node name="Screens" type="Node" parent="."]
 
-[node name="LoseScreen" type="ColorRect" parent="Screens"]
+[node name="LoseScreen" type="TextureRect" parent="Screens"]
 visible = false
-margin_left = -5.0
+margin_left = 1.0
 margin_top = -2.0
-margin_right = 647.0
-margin_bottom = 364.0
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="YouDied" type="Label" parent="Screens/LoseScreen"]
-margin_left = 98.5052
-margin_top = 88.4949
-margin_right = 548.505
-margin_bottom = 219.495
-size_flags_stretch_ratio = 0.0
-custom_fonts/font = ExtResource( 4 )
-custom_colors/font_color = Color( 0.901961, 0.305882, 0.294118, 1 )
-text = "YOU DIED"
-align = 1
-valign = 1
-uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PressAnyKey" type="Label" parent="Screens/LoseScreen"]
-margin_left = 97.091
-margin_top = 183.076
-margin_right = 547.091
-margin_bottom = 314.076
-size_flags_stretch_ratio = 0.0
-custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 0.929412, 0.929412, 0.929412, 1 )
-text = "Press any key to restart"
-align = 1
-valign = 1
+margin_right = 639.0
+margin_bottom = 359.0
+texture = ExtResource( 4 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
