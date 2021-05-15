@@ -17,7 +17,7 @@ const BossFamiliarScene = preload("res://Enemies/UnderworldEnemies/EnemyBossFami
 const TILE_SIZE = 32
 
 # Tilemap reference
-enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder}
+enum Tile { OuterWall, InnerWall, Ground, Door, MapObject, Ladder, TrapOff, TrapOn}
 
 const FOREST_ENEMIES = [
     {
@@ -300,6 +300,9 @@ class Boss extends Reference:
         sprite_node.play("death")
         if sprite_node.animation == "death" && sprite_node.frame == sprite_node.frames.get_frame_count("death")-1:
             sprite_node.queue_free()
+
+        # Add ladder
+        game_class.level.set_tile(6, 6, Tile.Ladder)
 
     func act(level, player):
         level.statue_countdown()
