@@ -190,6 +190,8 @@ func handle_directional_input(dx, dy):
                 var new_hp = min(player.total_hp, int(player.hp + (0.5 * player.total_hp)))
                 if current_level == 3:  # boss level
                     start_boss_level(new_hp, player.total_hp, player.damage)
+                elif current_level == 4: # End credits
+                    get_tree().change_scene("res://EndScreen.tscn")
                 else:
                     start_game(current_level, false, new_hp, player.total_hp, player.damage)
                 hud.transition_player.play_backwards("Fade")
