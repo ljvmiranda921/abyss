@@ -7,12 +7,12 @@ Descend into the abyss, a retro action-roguelike game
 
 <table>
   <tr>
-    <td><img src="screenshots/act1.png" width="320"></td>
-    <td><img src="screenshots/act2.png" width="320"></td>
+    <td><img src="screenshots/act1.png" width="350"></td>
+    <td><img src="screenshots/act2.png" width="350"></td>
    </tr> 
    <tr>
-    <td><img src="screenshots/act3.png" width="320"></td>
-    <td><img src="art/DeathScreen.png" width="320"></td>
+    <td><img src="screenshots/act3.png" width="350"></td>
+    <td><img src="art/DeathScreen.png" width="350"></td>
   </tr>
 </table>
 
