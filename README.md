@@ -9,10 +9,18 @@ Play it on [itch.io](https://ljvmiranda921.itch.io/abyss)
 <img src="screenshots/act3.png" width="300">
 <img src="art/DeathScreen.png" width="300">
 
-![](screenshots/TitleCard.png)
-![](screenshots/act1.png)
-![](screenshots/act2.png)
-![](screenshots/act3.png)
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="screenshots/act1.png" width="300"></td>
+    <td><img src="screenshots/act2.png" width="300"></td>
+   </tr> 
+   <tr>
+    <td><img src="screenshots/act3.png" width="300"></td>
+    <td><img src="art/DeathScreen.png" width="300"></td>
+  </tr>
+</table>
 
 ## Notes
 
