@@ -1,18 +1,18 @@
 # Abyss
 
 Descend into the abyss, a retro action-roguelike game
-**Play it on [itch.io](https://ljvmiranda921.itch.io/abyss)**
+**[Play it on itch.io](https://ljvmiranda921.itch.io/abyss)**
 
 ## Screenshots
 
 <table>
   <tr>
-    <td><img src="screenshots/act1.png" width="300"></td>
-    <td><img src="screenshots/act2.png" width="300"></td>
+    <td><img src="screenshots/act1.png" width="320"></td>
+    <td><img src="screenshots/act2.png" width="320"></td>
    </tr> 
    <tr>
-    <td><img src="screenshots/act3.png" width="300"></td>
-    <td><img src="art/DeathScreen.png" width="300"></td>
+    <td><img src="screenshots/act3.png" width="320"></td>
+    <td><img src="art/DeathScreen.png" width="320"></td>
   </tr>
 </table>
 
