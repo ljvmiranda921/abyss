@@ -89,10 +89,8 @@ __meta__ = {
 
 [node name="LoseScreen" type="TextureRect" parent="Screens"]
 visible = false
-margin_left = 1.0
-margin_top = -2.0
-margin_right = 639.0
-margin_bottom = 359.0
+margin_right = 640.0
+margin_bottom = 360.0
 texture = ExtResource( 4 )
 expand = true
 __meta__ = {
