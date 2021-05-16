@@ -1,8 +1,9 @@
-<img src="screenshots/TitleCard.png" width="300">
+# Abyss
 
 Descend into the abyss, a retro action-roguelike game
 Play it on [itch.io](https://ljvmiranda921.itch.io/abyss)
 
+[![Available on itch.io](http://jessemillar.github.io/available-on-itchio-badge/badge-bw.png)](https://ljvmiranda921.itch.io/abyss)
 
 ## Screenshots
 
