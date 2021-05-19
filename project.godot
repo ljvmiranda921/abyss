@@ -38,9 +38,11 @@ _global_script_class_icons={
 
 [application]
 
-config/name="7drl"
+config/name="Abyss"
+config/description="Descend into the Abyss. Three Acts. One Final Showdown. Infinite fun"
 run/main_scene="res://StartScreen.tscn"
 config/icon="res://icon.png"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 
