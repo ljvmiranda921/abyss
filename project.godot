@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "AudioManage",
+"language": "GDScript",
+"path": "res://addons/WebAudioExternal/AudioManager.gd"
+}, {
+"base": "Node2D",
+"class": "AudioSpacial2D",
+"language": "GDScript",
+"path": "res://addons/WebAudioExternal/AudioSpacial2D.gd"
+}, {
 "base": "Reference",
 "class": "EnemyFactory",
 "language": "GDScript",
@@ -24,15 +34,23 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Items/ItemFactory.gd"
 }, {
+"base": "Node",
+"class": "JavascriptManage",
+"language": "GDScript",
+"path": "res://addons/WebAudioExternal/JavascriptManager.gd"
+}, {
 "base": "Reference",
 "class": "LevelFactory",
 "language": "GDScript",
 "path": "res://Level/LevelFactory.gd"
 } ]
 _global_script_class_icons={
+"AudioManage": "",
+"AudioSpacial2D": "",
 "EnemyFactory": "",
 "GitAPI": "",
 "ItemFactory": "",
+"JavascriptManage": "",
 "LevelFactory": ""
 }
 
@@ -47,6 +65,8 @@ config/windows_native_icon="res://icon.ico"
 [autoload]
 
 BackgroundMusic="*res://BackgroundMusic.tscn"
+JavascriptManager="*res://addons/WebAudioExternal/JavascriptManager.gd"
+AudioManager="*res://addons/WebAudioExternal/AudioManager.gd"
 
 [display]
 
@@ -54,6 +74,10 @@ window/size/width=640
 window/size/height=360
 window/stretch/mode="viewport"
 description=false
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/WebAudioExternal/plugin.cfg" )
 
 [gdnative]
 
